@@ -5,7 +5,7 @@
     <authorEmail>order@bestsite-studio.ru</authorEmail>
     <authorUrl>https://bestsite-tver.ru</authorUrl>
     <creationDate>2026</creationDate>
-    <version>1.4.0</version>
+    <version>1.5.0</version>
     <description><![CDATA[<h2>BSR Form</h2>Универсальный модуль всплывающей формы (БЭМ-версия).<br><br><b>Для вызова окна</b> добавьте кнопке на сайте класс <code>bsr-open-modal</code>.<br><br><b>Внимание:</b> Модуль работает в связке с плагином <a href="https://radicalmart.ru/all/radicalform" target="_blank">RadicalForm</a>.]]></description>
     <files>
         <filename module="mod_bsr_form">mod_bsr_form.php</filename>
@@ -14,7 +14,9 @@
     <config>
         <fields name="params">
             <fieldset name="basic" label="Настройки формы">
-                <field name="rf_call_id" type="text" label="ID для RadicalForm" default="123" />
+                
+                <field name="rf_call_id" type="text" label="Скрипты плагина RadicalForm" description="Укажите ID профиля из плагина RadicalForm (например: 123)" default="123" />
+                
                 <field name="form_title" type="text" label="Заголовок формы" default="Оставить заявку" />
                 <field name="autofill_title" type="radio" layout="joomla.form.field.radio.switcher" label="Подставлять текст кнопки в Заголовок?" default="1">
                     <option value="0">Нет</option>
