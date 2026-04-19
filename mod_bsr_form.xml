@@ -5,32 +5,29 @@
     <authorEmail>order@bestsite-studio.ru</authorEmail>
     <authorUrl>https://bestsite-tver.ru</authorUrl>
     <creationDate>2026</creationDate>
-    <version>1.8.0</version>
+    <version>2.0.0</version>
     <description><![CDATA[
-        <div style="background: #f9f9f9; padding: 15px; border-left: 4px solid #336884; border-radius: 4px; margin-bottom: 20px;">
-            <h2 style="margin-top: 0;">Универсальная форма BSR Form</h2>
-            <p>Модуль всплывающей формы. Позволяет выводить несколько независимых форм на одной странице.</p>
+        <div style="background: #f4f7f9; padding: 20px; border-left: 5px solid #004E82; border-radius: 4px; font-family: sans-serif;">
+            <h2 style="margin-top: 0; color: #004E82;">BSR Form — Инструкция</h2>
+            <p>Универсальный модуль всплывающей формы с поддержкой аналитики и редиректов.</p>
 
-            <h3>Как привязать кнопку к форме на сайте?</h3>
-            <p>Чтобы всплывающее окно открывалось по клику, вам нужно добавить определенный CSS-класс вашей кнопке или ссылке. Есть два варианта работы:</p>
-
-            <ul style="line-height: 1.6;">
-                <li style="margin-bottom: 15px;">
-                    <b>Вариант 1: Универсальный вызов (если форма одна)</b><br>
-                    Просто добавьте класс <code>bsr-open-modal</code>. Этот класс всегда открывает <u>первую</u> найденную форму BSR на странице.<br>
-                    <span style="color: #666;">Пример:</span> <code>&lt;button class="bsr-open-modal"&gt;Оставить заявку&lt;/button&gt;</code>
-                </li>
-                <li>
-                    <b>Вариант 2: Точечный вызов (если форм несколько)</b><br>
-                    1. Зайдите в настройки модуля на вкладку "Дизайн и Атрибуты".<br>
-                    2. Впишите латинское слово в поле "ID формы" (например: <b>feedback</b>).<br>
-                    3. Добавьте вашей кнопке на сайте класс <code>bsr-open-ID</code> (то есть <code>bsr-open-feedback</code>).<br>
-                    <span style="color: #666;">Пример:</span> <code>&lt;a href="#" class="bsr-open-feedback"&gt;Заказать звонок&lt;/a&gt;</code>
-                </li>
+            <h3 style="color: #333; border-bottom: 1px solid #ccc; padding-bottom: 5px;">1. Как открыть форму</h3>
+            <p>Добавьте любой кнопке или ссылке на сайте специальный CSS-класс:</p>
+            <ul>
+                <li><b>Общий вызов:</b> класс <code>bsr-open-modal</code> (открывает первую форму BSR на странице).</li>
+                <li><b>Точечный вызов:</b> задайте "ID формы" в настройках (например, <code>order</code>) и используйте класс <code>bsr-open-order</code>.</li>
             </ul>
+            <p><i>Пример:</i> <code>&lt;button class="bsr-open-order"&gt;Заказать&lt;/button&gt;</code></p>
 
-            <hr style="border: 0; border-top: 1px solid #ddd; margin: 15px 0;">
-            <p style="margin-bottom: 0;"><b>Важно:</b> Модуль работает в строгой связке с плагином <a href="https://radicalmart.ru/all/radicalform" target="_blank">RadicalForm</a>. Убедитесь, что плагин установлен.</p>
+            <h3 style="color: #333; border-bottom: 1px solid #ccc; padding-bottom: 5px;">2. Редирект после отправки</h3>
+            <p>Если поле <b>"URL для редиректа"</b> заполнено (например: <code>/thanks</code>), пользователь будет перенаправлен на эту страницу сразу после успеха. Если пусто — покажется стандартное сообщение.</p>
+
+            <h3 style="color: #333; border-bottom: 1px solid #ccc; padding-bottom: 5px;">3. Яндекс.Метрика</h3>
+            <p>В поле <b>"ID цели"</b> впишите идентификатор из настроек Метрики (тип: JavaScript-событие). Модуль автоматически найдет счетчик на странице и отправит данные.</p>
+
+            <p style="background: #fff; padding: 10px; border: 1px dashed #999; margin-top: 15px;">
+                <b>Внимание:</b> Модуль работает только при установленном плагине <a href="https://radicalmart.ru/all/radicalform" target="_blank">RadicalForm</a>.
+            </p>
         </div>
     ]]></description>
     <files>
@@ -40,16 +37,17 @@
     <config>
         <fields name="params">
             <fieldset name="basic" label="Настройки формы">
-                <field name="rf_call_id" type="text" label="Скрипты плагина RadicalForm" description="Укажите ID профиля из плагина RadicalForm (например: 123)" default="123" />
+                <field name="rf_call_id" type="text" label="Скрипты плагина RadicalForm" default="123" />
                 <field name="form_title" type="text" label="Заголовок формы" default="Оставить заявку" />
                 <field name="autofill_title" type="radio" layout="joomla.form.field.radio.switcher" label="Подставлять текст кнопки в Заголовок?" default="1">
                     <option value="0">Нет</option>
                     <option value="1">Да</option>
                 </field>
                 <field name="btn_text" type="text" label="Текст кнопки" default="Отправить" />
-                <field name="success_msg" type="textarea" label="Текст успешной отправки" default="Спасибо! Заявка принята. Обычно мы перезваниваем в течение 10-15 минут." />
+                <field name="success_msg" type="textarea" label="Текст успешной отправки" default="Спасибо! Заявка принята." />
+                <field name="redirect_url" type="text" label="URL для редиректа" description="Например: /thanks" default="" />
+                <field name="ym_goal" type="text" label="ID цели Яндекс.Метрики" description="Идентификатор JavaScript-события" default="" />
                 <field name="agreement_text" type="editor" filter="raw" buttons="true" hide="pagebreak,readmore" label="Текст согласия (чекбокс)" default="Нажимая кнопку, я даю своё согласие на обработку персональных данных." />
-
                 <field name="form_fields" type="subform" label="Поля формы" multiple="true" min="1" layout="joomla.form.field.subform.repeatable-table">
                     <form>
                         <field name="f_type" type="list" label="Тип" default="text">
@@ -69,9 +67,8 @@
                     </form>
                 </field>
             </fieldset>
-
             <fieldset name="advanced" label="Дизайн и Атрибуты">
-                <field name="form_id" type="text" label="ID формы" description="Используется для связи кнопки с формой. Впишите латинские буквы без пробелов (например: feedback)" default="" />
+                <field name="form_id" type="text" label="ID формы" description="Латинские буквы" default="" />
                 <field name="form_class" type="text" label="CSS классы формы" default="" />
                 <field name="btn_class" type="text" label="CSS классы кнопки" default="" />
                 <field name="color_btn" type="color" label="Цвет кнопки" default="" />
