@@ -2,7 +2,8 @@
 defined('_JEXEC') or die;
 ?>
 
-<div class="bsr-modal bsr-modal--hidden">
+<div id="<?php echo htmlspecialchars((string) $uniqueModalId, ENT_QUOTES, 'UTF-8'); ?>"
+    class="bsr-modal bsr-modal--hidden">
     <div class="bsr-modal__content">
         <a class="bsr-modal__close" title="Закрыть">&times;</a>
 
@@ -10,8 +11,8 @@ defined('_JEXEC') or die;
             <div class="bsr-form__header">
                 <h3 class="bsr-form__title"><?php echo htmlspecialchars((string) $formTitle, ENT_QUOTES, 'UTF-8'); ?>
                 </h3>
-                <input name="rfSubject" value="<?php echo htmlspecialchars((string) $formTitle, ENT_QUOTES, 'UTF-8'); ?>"
-                    type="hidden">
+                <input name="rfSubject"
+                    value="<?php echo htmlspecialchars((string) $formTitle, ENT_QUOTES, 'UTF-8'); ?>" type="hidden">
             </div>
 
             <?php if (!empty($formFields)): ?>
@@ -69,7 +70,8 @@ defined('_JEXEC') or die;
         <div class="bsr-success">
             <div class="bsr-success__title">Отлично!</div>
             <div class="bsr-success__text">
-                <?php echo nl2br(htmlspecialchars((string) $successMsg, ENT_QUOTES, 'UTF-8')); ?></div>
+                <?php echo nl2br(htmlspecialchars((string) $successMsg, ENT_QUOTES, 'UTF-8')); ?>
+            </div>
         </div>
     </div>
 </div>
@@ -284,81 +286,78 @@ defined('_JEXEC') or die;
 </style>
 
 <script>
-    window.rfCall_1 = function () {
-        const form = document.querySelector('.bsr-modal .bsr-form');
-        if (form) form.style.opacity = "0.5";
-    };
+    (function () {
+        const modalId = "<?php echo htmlspecialchars((string) $uniqueModalId, ENT_QUOTES, 'UTF-8'); ?>";
 
-    window.rfCall_2 = function () {
-        const msg = document.querySelector('.bsr-modal .bsr-success');
-        const form = document.querySelector('.bsr-modal .bsr-form');
-        if (msg) msg.style.display = "block";
-        if (form) {
-            form.style.display = "none";
-            form.style.opacity = "1";
-        }
-    };
-
-    window.rfCall_3 = function () {
-        setTimeout(() => {
-            const modal = document.querySelector('.bsr-modal');
-            const msg = document.querySelector('.bsr-modal .bsr-success');
-            if (msg) msg.style.display = "none";
-            if (modal) modal.classList.add('bsr-modal--hidden');
-        }, 3000);
-    };
-
-    function initBsrModal() {
-        const formModal = document.querySelector('.bsr-modal');
-        if (!formModal) return;
-
-        const titleElem = formModal.querySelector('.bsr-form__title');
-        const subjectInput = formModal.querySelector('input[name="rfSubject"]');
-        const modalForm = formModal.querySelector('.bsr-form');
-        const successMess = formModal.querySelector('.bsr-success');
-
-        const enableAutofill = <?php echo $autofillTitle ? 'true' : 'false'; ?>;
-        const defaultTitle = "<?php echo addslashes((string) $formTitle); ?>";
-
-        const closeModal = () => formModal.classList.add('bsr-modal--hidden');
-
-        const openModal = (btnText) => {
-            const cleanText = btnText ? btnText.trim() : '';
-            let currentTitle = defaultTitle;
-
-            if (enableAutofill && cleanText) {
-                const lowerText = cleanText.toLowerCase();
-                if (!lowerText.includes('зарегистрир') && !lowerText.includes('отправить')) {
-                    currentTitle = cleanText;
-                }
-            }
-
-            if (titleElem) titleElem.textContent = currentTitle;
-            if (subjectInput) subjectInput.value = currentTitle;
-
-            modalForm.style.display = "block";
-            modalForm.style.opacity = "1";
-            successMess.style.display = "none";
-
-            formModal.classList.remove('bsr-modal--hidden');
+        // 1. УНИВЕРСАЛЬНЫЙ СЛУШАТЕЛЬ СЕТИ (Перехватываем успех AJAX)
+        const interceptAjax = () => {
+            // Перехват для старых браузеров и jQuery (XMLHttpRequest)
+            const oldOpen = XMLHttpRequest.prototype.open;
+            XMLHttpRequest.prototype.open = function () {
+                this.addEventListener('load', () => {
+                    // Если в адресе запроса есть radicalform и статус 200 (ОК)
+                    if (this.responseURL.includes('radicalform') && this.status === 200) {
+                        handleGlobalSuccess();
+                    }
+                });
+                oldOpen.apply(this, arguments);
+            };
         };
 
-        document.addEventListener('click', (event) => {
-            const openBtn = event.target.closest('.bsr-open-modal');
-            if (openBtn && !openBtn.classList.contains('rf-button-send')) {
-                event.preventDefault();
-                openModal(openBtn.textContent);
-            }
+        const handleGlobalSuccess = () => {
+            const activeModal = document.querySelector('.bsr-modal:not(.bsr-modal--hidden)');
+            if (!activeModal) return;
 
-            if (event.target.closest('.bsr-modal__close') || event.target === formModal) {
-                closeModal();
-            }
-        });
-    }
+            const successBox = activeModal.querySelector('.bsr-success');
+            const formElem = activeModal.querySelector('.bsr-form');
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initBsrModal);
-    } else {
-        initBsrModal();
-    }
+            if (successBox) successBox.style.display = "block";
+            if (formElem) formElem.style.display = "none";
+
+            // Закрытие через 3 секунды
+            setTimeout(() => {
+                activeModal.classList.add('bsr-modal--hidden');
+                setTimeout(() => {
+                    if (successBox) successBox.style.display = "none";
+                    if (formElem) { formElem.style.display = "block"; formElem.style.opacity = "1"; }
+                }, 500);
+            }, 3000);
+        };
+
+        interceptAjax();
+
+        // 2. ЛОГИКА ОТКРЫТИЯ/ЗАКРЫТИЯ (Ваша стандартная)
+        const setupForm = () => {
+            const formModal = document.getElementById(modalId);
+            if (!formModal) return;
+
+            document.addEventListener('click', (e) => {
+                const openBtn = e.target.closest('.bsr-open-' + modalId + ', .bsr-open-modal');
+                if (openBtn && !e.target.classList.contains('rf-button-send')) {
+                    // Защита первой формы
+                    if (openBtn.classList.contains('bsr-open-modal') && !openBtn.classList.contains('bsr-open-' + modalId)) {
+                        if (document.querySelector('.bsr-modal') !== formModal) return;
+                    }
+
+                    e.preventDefault();
+                    const title = formModal.querySelector('.bsr-form__title');
+                    const subject = formModal.querySelector('input[name="rfSubject"]');
+                    const btnText = openBtn.textContent.trim();
+
+                    if (<?php echo $autofillTitle ? 'true' : 'false'; ?> && !btnText.toLowerCase().includes('отправить')) {
+                        if (title) title.textContent = btnText;
+                        if (subject) subject.value = btnText;
+                    }
+
+                    formModal.classList.remove('bsr-modal--hidden');
+                }
+
+                if (e.target.closest('.bsr-modal__close') || e.target === formModal) {
+                    formModal.classList.add('bsr-modal--hidden');
+                }
+            });
+        };
+
+        setupForm();
+    })();
 </script>

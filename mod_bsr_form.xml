@@ -5,8 +5,34 @@
     <authorEmail>order@bestsite-studio.ru</authorEmail>
     <authorUrl>https://bestsite-tver.ru</authorUrl>
     <creationDate>2026</creationDate>
-    <version>1.5.0</version>
-    <description><![CDATA[<h2>BSR Form</h2>Универсальный модуль всплывающей формы (БЭМ-версия).<br><br><b>Для вызова окна</b> добавьте кнопке на сайте класс <code>bsr-open-modal</code>.<br><br><b>Внимание:</b> Модуль работает в связке с плагином <a href="https://radicalmart.ru/all/radicalform" target="_blank">RadicalForm</a>.]]></description>
+    <version>1.8.0</version>
+    <description><![CDATA[
+        <div style="background: #f9f9f9; padding: 15px; border-left: 4px solid #336884; border-radius: 4px; margin-bottom: 20px;">
+            <h2 style="margin-top: 0;">Универсальная форма BSR Form</h2>
+            <p>Модуль всплывающей формы. Позволяет выводить несколько независимых форм на одной странице.</p>
+
+            <h3>Как привязать кнопку к форме на сайте?</h3>
+            <p>Чтобы всплывающее окно открывалось по клику, вам нужно добавить определенный CSS-класс вашей кнопке или ссылке. Есть два варианта работы:</p>
+
+            <ul style="line-height: 1.6;">
+                <li style="margin-bottom: 15px;">
+                    <b>Вариант 1: Универсальный вызов (если форма одна)</b><br>
+                    Просто добавьте класс <code>bsr-open-modal</code>. Этот класс всегда открывает <u>первую</u> найденную форму BSR на странице.<br>
+                    <span style="color: #666;">Пример:</span> <code>&lt;button class="bsr-open-modal"&gt;Оставить заявку&lt;/button&gt;</code>
+                </li>
+                <li>
+                    <b>Вариант 2: Точечный вызов (если форм несколько)</b><br>
+                    1. Зайдите в настройки модуля на вкладку "Дизайн и Атрибуты".<br>
+                    2. Впишите латинское слово в поле "ID формы" (например: <b>feedback</b>).<br>
+                    3. Добавьте вашей кнопке на сайте класс <code>bsr-open-ID</code> (то есть <code>bsr-open-feedback</code>).<br>
+                    <span style="color: #666;">Пример:</span> <code>&lt;a href="#" class="bsr-open-feedback"&gt;Заказать звонок&lt;/a&gt;</code>
+                </li>
+            </ul>
+
+            <hr style="border: 0; border-top: 1px solid #ddd; margin: 15px 0;">
+            <p style="margin-bottom: 0;"><b>Важно:</b> Модуль работает в строгой связке с плагином <a href="https://radicalmart.ru/all/radicalform" target="_blank">RadicalForm</a>. Убедитесь, что плагин установлен.</p>
+        </div>
+    ]]></description>
     <files>
         <filename module="mod_bsr_form">mod_bsr_form.php</filename>
         <folder>tmpl</folder>
@@ -14,9 +40,7 @@
     <config>
         <fields name="params">
             <fieldset name="basic" label="Настройки формы">
-                
                 <field name="rf_call_id" type="text" label="Скрипты плагина RadicalForm" description="Укажите ID профиля из плагина RadicalForm (например: 123)" default="123" />
-                
                 <field name="form_title" type="text" label="Заголовок формы" default="Оставить заявку" />
                 <field name="autofill_title" type="radio" layout="joomla.form.field.radio.switcher" label="Подставлять текст кнопки в Заголовок?" default="1">
                     <option value="0">Нет</option>
@@ -47,7 +71,7 @@
             </fieldset>
 
             <fieldset name="advanced" label="Дизайн и Атрибуты">
-                <field name="form_id" type="text" label="ID формы" default="" />
+                <field name="form_id" type="text" label="ID формы" description="Используется для связи кнопки с формой. Впишите латинские буквы без пробелов (например: feedback)" default="" />
                 <field name="form_class" type="text" label="CSS классы формы" default="" />
                 <field name="btn_class" type="text" label="CSS классы кнопки" default="" />
                 <field name="color_btn" type="color" label="Цвет кнопки" default="" />
