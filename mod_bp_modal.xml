@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" client="site" method="upgrade">
+    <name>BP Modal Form</name>
+    <author>BP</author>
+    <creationDate>2026</creationDate>
+    <version>1.0.0</version>
+    <description>Модуль всплывающей формы с динамическими полями. Вызывается классом open__modal.</description>
+    <files>
+        <filename module="mod_bp_modal">mod_bp_modal.php</filename>
+        <folder>tmpl</folder>
+    </files>
+    <config>
+        <fields name="params">
+            <fieldset name="basic" label="Настройки полей">
+                
+                <field name="rf_call_id" type="text" label="ID для RadicalForm" default="123" description="Например: 123" />
+                
+                <field name="form_title" type="text" label="Заголовок формы" default="Регистрация на семинар" />
+
+                <field name="success_msg" type="textarea" label="Текст успешной отправки" default="Спасибо! Заявка принята. Обычно мы перезваниваем в течение 10-15 минут." />
+
+                <field name="form_fields" type="subform" label="Поля формы" description="Добавьте нужные поля" multiple="true" min="2" layout="joomla.form.field.subform.repeatable-table">
+                    <form>
+                        <field name="f_type" type="list" label="Тип поля" default="text">
+                            <option value="text">Текст (text)</option>
+                            <option value="tel">Телефон (tel)</option>
+                            <option value="email">Email</option>
+                            <option value="date">Дата (date)</option>
+                            <option value="textarea">Большой текст (textarea)</option>
+                            <option value="checkbox">Чекбокс (согласие)</option>
+                        </field>
+                        
+                        <field name="f_name" type="text" label="Имя переменной (name)" required="true" description="Например: phone, fio, company. Должно быть на английском без пробелов." />
+                        
+                        <field name="f_placeholder" type="text" label="Текст (Placeholder / Label)" description="Текст внутри поля или текст рядом с чекбоксом" />
+                        
+                        <field name="f_required" type="radio" layout="joomla.form.field.radio.switcher" label="Обязательно?" default="0">
+                            <option value="0">JNO</option>
+                            <option value="1">JYES</option>
+                        </field>
+                        
+                        <field name="f_error" type="text" label="Текст ошибки" description="Покажется, если поле не заполнено" default="Обязательное поле" />
+                    </form>
+                </field>
+
+            </fieldset>
+        </fields>
+    </config>
+</extension>
