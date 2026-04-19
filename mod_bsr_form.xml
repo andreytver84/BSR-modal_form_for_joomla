@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="module" client="site" method="upgrade">
-    <name>BSR Form</name>
+    <name>mod_bsr_form</name>
     <author>Увиков Андрей</author>
     <authorEmail>order@bestsite-studio.ru</authorEmail>
     <authorUrl>https://bestsite-tver.ru</authorUrl>
     <creationDate>2026</creationDate>
-    <version>1.0</version>
-    <description><![CDATA[Универсальный модуль всплывающей формы (БЭМ-версия).<br><br><b>Для вызова окна</b> добавьте кнопке на сайте класс <code>bsr-open-modal</code>.<br><br><b>Внимание:</b> Модуль работает в связке с плагином <a href="https://radicalmart.ru/all/radicalform" target="_blank">RadicalForm</a>.]]></description>
+    <version>1.4.0</version>
+    <description><![CDATA[<h2>BSR Form</h2>Универсальный модуль всплывающей формы (БЭМ-версия).<br><br><b>Для вызова окна</b> добавьте кнопке на сайте класс <code>bsr-open-modal</code>.<br><br><b>Внимание:</b> Модуль работает в связке с плагином <a href="https://radicalmart.ru/all/radicalform" target="_blank">RadicalForm</a>.]]></description>
     <files>
         <filename module="mod_bsr_form">mod_bsr_form.php</filename>
         <folder>tmpl</folder>
@@ -20,6 +20,7 @@
                     <option value="0">Нет</option>
                     <option value="1">Да</option>
                 </field>
+                <field name="btn_text" type="text" label="Текст кнопки" default="Отправить" />
                 <field name="success_msg" type="textarea" label="Текст успешной отправки" default="Спасибо! Заявка принята. Обычно мы перезваниваем в течение 10-15 минут." />
                 <field name="agreement_text" type="editor" filter="raw" buttons="true" hide="pagebreak,readmore" label="Текст согласия (чекбокс)" default="Нажимая кнопку, я даю своё согласие на обработку персональных данных." />
 
@@ -44,12 +45,12 @@
             </fieldset>
 
             <fieldset name="advanced" label="Дизайн и Атрибуты">
-                <field name="form_id" type="text" label="ID формы" description="Укажите ID для тега form (необязательно, например: my-form)" default="" />
-                <field name="form_class" type="text" label="CSS классы формы" description="Дополнительные классы для тега form" default="" />
-                <field name="btn_class" type="text" label="CSS классы кнопки" description="Например: sppb-btn sppb-btn-default sppb-btn-round" default="sppb-btn sppb-btn-default sppb-btn-round" />
-                <field name="color_btn" type="color" label="Цвет кнопки" default="#005b8c" />
-                <field name="color_btn_hover" type="color" label="Цвет кнопки при наведении" default="#003f63" />
-                <field name="color_focus" type="color" label="Цвет рамки поля (фокус)" default="#005b8c" />
+                <field name="form_id" type="text" label="ID формы" default="" />
+                <field name="form_class" type="text" label="CSS классы формы" default="" />
+                <field name="btn_class" type="text" label="CSS классы кнопки" default="" />
+                <field name="color_btn" type="color" label="Цвет кнопки" default="" />
+                <field name="color_btn_hover" type="color" label="Цвет кнопки при наведении" default="" />
+                <field name="color_focus" type="color" label="Цвет рамки поля (фокус)" default="" />
             </fieldset>
         </fields>
     </config>
