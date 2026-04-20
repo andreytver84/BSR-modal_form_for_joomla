@@ -1,11 +1,12 @@
 <?php
 defined('_JEXEC') or die;
+use Joomla\CMS\Language\Text;
 ?>
 
 <div id="<?php echo htmlspecialchars((string) $uniqueModalId, ENT_QUOTES, 'UTF-8'); ?>"
     class="bsr-modal bsr-modal--hidden">
     <div class="bsr-modal__content">
-        <a class="bsr-modal__close" title="Закрыть">&times;</a>
+        <a class="bsr-modal__close" title="<?php echo Text::_('MOD_BSR_FORM_TXT_CLOSE'); ?>">&times;</a>
 
         <form class="bsr-form <?php echo htmlspecialchars((string) $formClass, ENT_QUOTES, 'UTF-8'); ?>"
             data-redirect="<?php echo htmlspecialchars((string) $redirectUrl, ENT_QUOTES, 'UTF-8'); ?>"
@@ -14,8 +15,8 @@ defined('_JEXEC') or die;
             <div class="bsr-form__header">
                 <h3 class="bsr-form__title"><?php echo htmlspecialchars((string) $formTitle, ENT_QUOTES, 'UTF-8'); ?>
                 </h3>
-                <input name="rfSubject" value="<?php echo htmlspecialchars((string) $formTitle, ENT_QUOTES, 'UTF-8'); ?>"
-                    type="hidden">
+                <input name="rfSubject"
+                    value="<?php echo htmlspecialchars((string) $formTitle, ENT_QUOTES, 'UTF-8'); ?>" type="hidden">
             </div>
 
             <?php if (!empty($formFields)): ?>
@@ -26,9 +27,10 @@ defined('_JEXEC') or die;
                     $name = !empty($item['f_name']) ? (string) $item['f_name'] : '';
                     if (!$name)
                         continue;
+
                     $placeholder = !empty($item['f_placeholder']) ? (string) $item['f_placeholder'] : '';
                     $required = !empty($item['f_required']) ? 'required' : '';
-                    $errorText = !empty($item['f_error']) ? (string) $item['f_error'] : 'Обязательное поле';
+                    $errorText = !empty($item['f_error']) ? (string) $item['f_error'] : Text::_('MOD_BSR_FORM_DEFAULT_F_ERROR');
                     ?>
                     <div class="bsr-form__group">
                         <?php if ($type === 'textarea'): ?>
@@ -56,24 +58,26 @@ defined('_JEXEC') or die;
             <div class="bsr-form__group bsr-form__group--checkbox">
                 <div class="bsr-form__checkbox-wrapper">
                     <?php $chkId = 'rf_chk_' . $uniqueModalId; ?>
-                    <input class="bsr-form__checkbox" type="checkbox" name="acception" value="соглашаюсь" required
-                        checked id="<?php echo $chkId; ?>">
+                    <input class="bsr-form__checkbox" type="checkbox" name="acception" value="agree" required checked
+                        id="<?php echo $chkId; ?>">
                     <label class="bsr-form__label" for="<?php echo $chkId; ?>"><?php echo $agreementText; ?></label>
                 </div>
-                <div class="bsr-form__error bsr-form__error--checkbox">Необходимо подтвердить согласие</div>
+                <div class="bsr-form__error bsr-form__error--checkbox">
+                    <?php echo Text::_('MOD_BSR_FORM_ERROR_CHECKBOX'); ?></div>
             </div>
         </form>
 
         <div class="bsr-success">
-            <div class="bsr-success__title">Отлично!</div>
+            <div class="bsr-success__title"><?php echo Text::_('MOD_BSR_FORM_TXT_SUCCESS_TITLE'); ?></div>
             <div class="bsr-success__text">
-                <?php echo nl2br(htmlspecialchars((string) $successMsg, ENT_QUOTES, 'UTF-8')); ?></div>
+                <?php echo nl2br(htmlspecialchars((string) $successMsg, ENT_QUOTES, 'UTF-8')); ?>
+            </div>
         </div>
     </div>
 </div>
 
 <style>
-    /* Основные стили (без изменений) */
+    /* Основные стили / Main styles */
     .bsr-modal {
         position: fixed !important;
         z-index: 10000 !important;
@@ -151,7 +155,7 @@ defined('_JEXEC') or die;
         resize: vertical;
     }
 
-    /* Динамические цвета */
+    /* Динамические цвета / Dynamic colors */
     <?php if ($colorFocus): ?>
         .bsr-form__input:focus {
             border-color:
@@ -239,7 +243,7 @@ defined('_JEXEC') or die;
 
 <script>
     (function () {
-        // 1. УНИВЕРСАЛЬНЫЙ ПЕРЕХВАТЧИК УСПЕХА
+        // 1. УНИВЕРСАЛЬНЫЙ ПЕРЕХВАТЧИК УСПЕХА / UNIVERSAL SUCCESS INTERCEPTOR
         const bsrHandleSuccess = () => {
             const activeModal = document.querySelector('.bsr-modal:not(.bsr-modal--hidden)');
             if (!activeModal) return;
@@ -247,21 +251,19 @@ defined('_JEXEC') or die;
             const form = activeModal.querySelector('.bsr-form');
             const successBox = activeModal.querySelector('.bsr-success');
 
-            // Читаем настройки из data-атрибутов
+            // Читаем настройки из data-атрибутов / Read settings from data attributes
             const redirectUrl = form.getAttribute('data-redirect');
             const goalId = form.getAttribute('data-goal');
 
-            // А) Яндекс Метрика (событие reachGoal)
-            // Ищем все счетчики на странице и отправляем цель
+            // А) Яндекс Метрика (событие reachGoal) / Yandex Metrica (reachGoal event)
             if (goalId && typeof ym !== 'undefined') {
                 try {
-                    // Пытаемся отправить во все найденные счетчики (авто-определение)
                     ym.apply(null, [null, 'reachGoal', goalId]);
                     console.log('BSR Form: YM Goal sent - ' + goalId);
                 } catch (e) { console.warn('BSR Form: Metrica error', e); }
             }
 
-            // Б) Логика завершения (Редирект или Сообщение)
+            // Б) Логика завершения (Редирект или Сообщение) / Completion logic (Redirect or Message)
             if (redirectUrl) {
                 window.location.href = redirectUrl;
             } else {
@@ -278,19 +280,18 @@ defined('_JEXEC') or die;
             }
         };
 
-        // Слушаем завершение сетевых запросов (AJAX)
+        // Слушаем завершение сетевых запросов (AJAX) / Listen for network requests completion (AJAX)
         const oldOpen = XMLHttpRequest.prototype.open;
         XMLHttpRequest.prototype.open = function () {
             this.addEventListener('load', () => {
                 if (this.responseURL.includes('radicalform') && this.status === 200) {
-                    // Даем плагину RadicalForm 100мс на его внутренние дела и срабатываем сами
                     setTimeout(bsrHandleSuccess, 100);
                 }
             });
             oldOpen.apply(this, arguments);
         };
 
-        // 2. ИНИЦИАЛИЗАЦИЯ ОТКРЫТИЯ
+        // 2. ИНИЦИАЛИЗАЦИЯ ОТКРЫТИЯ / OPEN INITIALIZATION
         const setup = () => {
             const modalId = "<?php echo $uniqueModalId; ?>";
             const formModal = document.getElementById(modalId);
@@ -299,7 +300,7 @@ defined('_JEXEC') or die;
             document.addEventListener('click', (e) => {
                 const openBtn = e.target.closest('.bsr-open-' + modalId + ', .bsr-open-modal');
                 if (openBtn && !e.target.classList.contains('rf-button-send')) {
-                    // Если клик по общей кнопке, а форма не первая - игнорим
+                    // Игнорируем если клик по общей кнопке, а форма не первая / Ignore if common button clicked and form is not first
                     if (openBtn.classList.contains('bsr-open-modal') && !openBtn.classList.contains('bsr-open-' + modalId)) {
                         if (document.querySelector('.bsr-modal') !== formModal) return;
                     }
@@ -309,6 +310,7 @@ defined('_JEXEC') or die;
                     const title = formModal.querySelector('.bsr-form__title');
                     const subject = formModal.querySelector('input[name="rfSubject"]');
 
+                    // Автозаполнение заголовка / Autofill title
                     if (<?php echo $autofillTitle ? 'true' : 'false'; ?> && btnText && !btnText.toLowerCase().includes('отправить')) {
                         if (title) title.textContent = btnText;
                         if (subject) subject.value = btnText;
@@ -317,12 +319,13 @@ defined('_JEXEC') or die;
                     formModal.classList.remove('bsr-modal--hidden');
                 }
 
+                // Закрытие модального окна / Close modal
                 if (e.target.closest('.bsr-modal__close') || e.target === formModal) {
                     formModal.classList.add('bsr-modal--hidden');
                 }
             });
 
-            // Прозрачность при отправке
+            // Прозрачность при отправке / Opacity on submit
             formModal.querySelector('.bsr-form').addEventListener('submit', function () {
                 this.style.opacity = "0.5";
             });

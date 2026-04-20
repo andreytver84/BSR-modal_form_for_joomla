@@ -1,79 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="module" client="site" method="upgrade">
     <name>mod_bsr_form</name>
-    <author>Увиков Андрей</author>
+    <author>Andrey Uvikov</author>
     <authorEmail>order@bestsite-studio.ru</authorEmail>
     <authorUrl>https://bestsite-tver.ru</authorUrl>
     <creationDate>2026</creationDate>
-    <version>2.0.0</version>
-    <description><![CDATA[
-        <div style="background: #f4f7f9; padding: 20px; border-left: 5px solid #004E82; border-radius: 4px; font-family: sans-serif;">
-            <h2 style="margin-top: 0; color: #004E82;">BSR Form — Инструкция</h2>
-            <p>Универсальный модуль всплывающей формы с поддержкой аналитики и редиректов.</p>
-
-            <h3 style="color: #333; border-bottom: 1px solid #ccc; padding-bottom: 5px;">1. Как открыть форму</h3>
-            <p>Добавьте любой кнопке или ссылке на сайте специальный CSS-класс:</p>
-            <ul>
-                <li><b>Общий вызов:</b> класс <code>bsr-open-modal</code> (открывает первую форму BSR на странице).</li>
-                <li><b>Точечный вызов:</b> задайте "ID формы" в настройках (например, <code>order</code>) и используйте класс <code>bsr-open-order</code>.</li>
-            </ul>
-            <p><i>Пример:</i> <code>&lt;button class="bsr-open-order"&gt;Заказать&lt;/button&gt;</code></p>
-
-            <h3 style="color: #333; border-bottom: 1px solid #ccc; padding-bottom: 5px;">2. Редирект после отправки</h3>
-            <p>Если поле <b>"URL для редиректа"</b> заполнено (например: <code>/thanks</code>), пользователь будет перенаправлен на эту страницу сразу после успеха. Если пусто — покажется стандартное сообщение.</p>
-
-            <h3 style="color: #333; border-bottom: 1px solid #ccc; padding-bottom: 5px;">3. Яндекс.Метрика</h3>
-            <p>В поле <b>"ID цели"</b> впишите идентификатор из настроек Метрики (тип: JavaScript-событие). Модуль автоматически найдет счетчик на странице и отправит данные.</p>
-
-            <p style="background: #fff; padding: 10px; border: 1px dashed #999; margin-top: 15px;">
-                <b>Внимание:</b> Модуль работает только при установленном плагине <a href="https://radicalmart.ru/all/radicalform" target="_blank">RadicalForm</a>.
-            </p>
-        </div>
-    ]]></description>
+    <version>2.1.0</version>
+    <description>MOD_BSR_FORM_XML_DESCRIPTION</description>
     <files>
         <filename module="mod_bsr_form">mod_bsr_form.php</filename>
         <folder>tmpl</folder>
+        <folder>language</folder>
     </files>
     <config>
         <fields name="params">
-            <fieldset name="basic" label="Настройки формы">
-                <field name="rf_call_id" type="text" label="Скрипты плагина RadicalForm" default="123" />
-                <field name="form_title" type="text" label="Заголовок формы" default="Оставить заявку" />
-                <field name="autofill_title" type="radio" layout="joomla.form.field.radio.switcher" label="Подставлять текст кнопки в Заголовок?" default="1">
-                    <option value="0">Нет</option>
-                    <option value="1">Да</option>
+            <fieldset name="basic" label="MOD_BSR_FORM_FIELDSET_BASIC_LABEL">
+                <field name="rf_call_id" type="text" label="MOD_BSR_FORM_FIELD_RF_CALL_ID_LABEL" default="123" />
+                <field name="form_title" type="text" label="MOD_BSR_FORM_FIELD_FORM_TITLE_LABEL" default="MOD_BSR_FORM_DEFAULT_FORM_TITLE" />
+                <field name="autofill_title" type="radio" layout="joomla.form.field.radio.switcher" label="MOD_BSR_FORM_FIELD_AUTOFILL_TITLE_LABEL" default="1">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
                 </field>
-                <field name="btn_text" type="text" label="Текст кнопки" default="Отправить" />
-                <field name="success_msg" type="textarea" label="Текст успешной отправки" default="Спасибо! Заявка принята." />
-                <field name="redirect_url" type="text" label="URL для редиректа" description="Например: /thanks" default="" />
-                <field name="ym_goal" type="text" label="ID цели Яндекс.Метрики" description="Идентификатор JavaScript-события" default="" />
-                <field name="agreement_text" type="editor" filter="raw" buttons="true" hide="pagebreak,readmore" label="Текст согласия (чекбокс)" default="Нажимая кнопку, я даю своё согласие на обработку персональных данных." />
-                <field name="form_fields" type="subform" label="Поля формы" multiple="true" min="1" layout="joomla.form.field.subform.repeatable-table">
+                <field name="btn_text" type="text" label="MOD_BSR_FORM_FIELD_BTN_TEXT_LABEL" default="MOD_BSR_FORM_DEFAULT_BTN_TEXT" />
+                <field name="success_msg" type="textarea" label="MOD_BSR_FORM_FIELD_SUCCESS_MSG_LABEL" default="MOD_BSR_FORM_DEFAULT_SUCCESS_MSG" />
+                <field name="redirect_url" type="text" label="MOD_BSR_FORM_FIELD_REDIRECT_URL_LABEL" description="MOD_BSR_FORM_FIELD_REDIRECT_URL_DESC" default="" />
+                <field name="ym_goal" type="text" label="MOD_BSR_FORM_FIELD_YM_GOAL_LABEL" description="MOD_BSR_FORM_FIELD_YM_GOAL_DESC" default="" />
+                <field name="agreement_text" type="editor" filter="raw" buttons="true" hide="pagebreak,readmore" label="MOD_BSR_FORM_FIELD_AGREEMENT_TEXT_LABEL" default="MOD_BSR_FORM_DEFAULT_AGREEMENT_TEXT" />
+                
+                <field name="form_fields" type="subform" label="MOD_BSR_FORM_FIELD_FORM_FIELDS_LABEL" multiple="true" min="1" layout="joomla.form.field.subform.repeatable-table">
                     <form>
-                        <field name="f_type" type="list" label="Тип" default="text">
-                            <option value="text">Текст</option>
-                            <option value="tel">Телефон</option>
-                            <option value="email">Email</option>
-                            <option value="date">Дата</option>
-                            <option value="textarea">Большой текст</option>
+                        <field name="f_type" type="list" label="MOD_BSR_FORM_FIELD_F_TYPE_LABEL" default="text">
+                            <option value="text">MOD_BSR_FORM_OPTION_TEXT</option>
+                            <option value="tel">MOD_BSR_FORM_OPTION_TEL</option>
+                            <option value="email">MOD_BSR_FORM_OPTION_EMAIL</option>
+                            <option value="date">MOD_BSR_FORM_OPTION_DATE</option>
+                            <option value="textarea">MOD_BSR_FORM_OPTION_TEXTAREA</option>
                         </field>
-                        <field name="f_name" type="text" label="Name (англ)" required="true" />
-                        <field name="f_placeholder" type="text" label="Placeholder" />
-                        <field name="f_required" type="radio" layout="joomla.form.field.radio.switcher" label="Обязательно?" default="0">
+                        <field name="f_name" type="text" label="MOD_BSR_FORM_FIELD_F_NAME_LABEL" required="true" />
+                        <field name="f_placeholder" type="text" label="MOD_BSR_FORM_FIELD_F_PLACEHOLDER_LABEL" />
+                        <field name="f_required" type="radio" layout="joomla.form.field.radio.switcher" label="MOD_BSR_FORM_FIELD_F_REQUIRED_LABEL" default="0">
                             <option value="0">JNO</option>
                             <option value="1">JYES</option>
                         </field>
-                        <field name="f_error" type="text" label="Текст ошибки" default="Обязательное поле" />
+                        <field name="f_error" type="text" label="MOD_BSR_FORM_FIELD_F_ERROR_LABEL" default="MOD_BSR_FORM_DEFAULT_F_ERROR" />
                     </form>
                 </field>
             </fieldset>
-            <fieldset name="advanced" label="Дизайн и Атрибуты">
-                <field name="form_id" type="text" label="ID формы" description="Латинские буквы" default="" />
-                <field name="form_class" type="text" label="CSS классы формы" default="" />
-                <field name="btn_class" type="text" label="CSS классы кнопки" default="" />
-                <field name="color_btn" type="color" label="Цвет кнопки" default="" />
-                <field name="color_btn_hover" type="color" label="Цвет кнопки при наведении" default="" />
-                <field name="color_focus" type="color" label="Цвет рамки поля (фокус)" default="" />
+
+            <fieldset name="advanced" label="MOD_BSR_FORM_FIELDSET_ADVANCED_LABEL">
+                <field name="form_id" type="text" label="MOD_BSR_FORM_FIELD_FORM_ID_LABEL" description="MOD_BSR_FORM_FIELD_FORM_ID_DESC" default="" />
+                <field name="form_class" type="text" label="MOD_BSR_FORM_FIELD_FORM_CLASS_LABEL" default="" />
+                <field name="btn_class" type="text" label="MOD_BSR_FORM_FIELD_BTN_CLASS_LABEL" default="" />
+                <field name="color_btn" type="color" label="MOD_BSR_FORM_FIELD_COLOR_BTN_LABEL" default="" />
+                <field name="color_btn_hover" type="color" label="MOD_BSR_FORM_FIELD_COLOR_BTN_HOVER_LABEL" default="" />
+                <field name="color_focus" type="color" label="MOD_BSR_FORM_FIELD_COLOR_FOCUS_LABEL" default="" />
             </fieldset>
         </fields>
     </config>
