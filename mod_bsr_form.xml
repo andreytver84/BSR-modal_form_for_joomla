@@ -5,7 +5,7 @@
     <authorEmail>order@bestsite-studio.ru</authorEmail>
     <authorUrl>https://bestsite-tver.ru</authorUrl>
     <creationDate>2026</creationDate>
-    <version>2.3.0</version>
+    <version>2.3.1</version>
     <description><![CDATA[
         <div style="background: #f4f7f9; padding: 20px; border-left: 5px solid #004E82; border-radius: 4px; font-family: sans-serif; margin-bottom: 20px;">
             <h2 style="margin-top: 0; color: #004E82;">BSR Form — Инструкция</h2>
@@ -35,16 +35,22 @@
         <fields name="params">
             <fieldset name="basic" label="MOD_BSR_FORM_FIELDSET_BASIC_LABEL">
                 <field name="rf_call_id" type="text" label="MOD_BSR_FORM_FIELD_RF_CALL_ID_LABEL" default="123" />
-                <field name="form_title" type="text" label="MOD_BSR_FORM_FIELD_FORM_TITLE_LABEL" default="MOD_BSR_FORM_DEFAULT_FORM_TITLE" />
+                
+                <field name="form_title" type="text" label="MOD_BSR_FORM_FIELD_FORM_TITLE_LABEL" default="MOD_BSR_FORM_DEFAULT_FORM_TITLE" translate_default="true" />
+                
                 <field name="autofill_title" type="radio" layout="joomla.form.field.radio.switcher" label="MOD_BSR_FORM_FIELD_AUTOFILL_TITLE_LABEL" default="1">
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
                 </field>
-                <field name="btn_text" type="text" label="MOD_BSR_FORM_FIELD_BTN_TEXT_LABEL" default="MOD_BSR_FORM_DEFAULT_BTN_TEXT" />
-                <field name="success_msg" type="textarea" label="MOD_BSR_FORM_FIELD_SUCCESS_MSG_LABEL" default="MOD_BSR_FORM_DEFAULT_SUCCESS_MSG" />
+                
+                <field name="btn_text" type="text" label="MOD_BSR_FORM_FIELD_BTN_TEXT_LABEL" default="MOD_BSR_FORM_DEFAULT_BTN_TEXT" translate_default="true" />
+                
+                <field name="success_msg" type="textarea" label="MOD_BSR_FORM_FIELD_SUCCESS_MSG_LABEL" default="MOD_BSR_FORM_DEFAULT_SUCCESS_MSG" translate_default="true" />
+                
                 <field name="redirect_url" type="text" label="MOD_BSR_FORM_FIELD_REDIRECT_URL_LABEL" description="MOD_BSR_FORM_FIELD_REDIRECT_URL_DESC" default="" />
                 <field name="ym_goal" type="text" label="MOD_BSR_FORM_FIELD_YM_GOAL_LABEL" description="MOD_BSR_FORM_FIELD_YM_GOAL_DESC" default="" />
-                <field name="agreement_text" type="editor" filter="raw" buttons="true" hide="pagebreak,readmore" label="MOD_BSR_FORM_FIELD_AGREEMENT_TEXT_LABEL" default="MOD_BSR_FORM_DEFAULT_AGREEMENT_TEXT" />
+                
+                <field name="agreement_text" type="editor" filter="raw" buttons="true" hide="pagebreak,readmore" label="MOD_BSR_FORM_FIELD_AGREEMENT_TEXT_LABEL" default="MOD_BSR_FORM_DEFAULT_AGREEMENT_TEXT" translate_default="true" />
                 
                 <field name="form_fields" type="subform" label="MOD_BSR_FORM_FIELD_FORM_FIELDS_LABEL" multiple="true" min="1" layout="joomla.form.field.subform.repeatable-table">
                     <form>
@@ -61,7 +67,8 @@
                             <option value="0">JNO</option>
                             <option value="1">JYES</option>
                         </field>
-                        <field name="f_error" type="text" label="MOD_BSR_FORM_FIELD_F_ERROR_LABEL" default="MOD_BSR_FORM_DEFAULT_F_ERROR" />
+                        
+                        <field name="f_error" type="text" label="MOD_BSR_FORM_FIELD_F_ERROR_LABEL" default="MOD_BSR_FORM_DEFAULT_F_ERROR" translate_default="true" />
                     </form>
                 </field>
             </fieldset>
