@@ -34,7 +34,7 @@
     <config>
         <fields name="params">
             <fieldset name="basic" label="MOD_BSR_FORM_FIELDSET_BASIC_LABEL">
-                <field name="rf_call_id" type="text" label="MOD_BSR_FORM_FIELD_RF_CALL_ID_LABEL" default="123" />
+                <field name="rf_call_id" type="text" label="MOD_BSR_FORM_FIELD_RF_CALL_ID_LABEL" default="" />
                 
                 <field name="form_title" type="text" label="MOD_BSR_FORM_FIELD_FORM_TITLE_LABEL" default="MOD_BSR_FORM_DEFAULT_FORM_TITLE" translate_default="true" />
                 
