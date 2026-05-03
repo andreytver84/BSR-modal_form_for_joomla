@@ -13,21 +13,23 @@
 ### 🚀 Основные возможности
 
 - **Множественные формы:** Возможность размещать несколько независимых форм на одной странице без конфликтов JS.
-- **Конструктор полей:** Добавление текстовых полей, телефонов, email, дат и текстовых областей через админку.
+- **Конструктор полей:** Добавление текстовых полей, телефонов, email, дат, текстовых областей и **файлов** через админку.
+- **Прикрепление файлов:** Поддержка загрузки документов, изображений и архивов. Свой текст кнопки загрузки легко настраивается через поле _Placeholder_.
 - **Динамический заголовок:** Автоматическая подстановка текста из нажатой кнопки в заголовок формы и тему письма.
-- **Гибкий дизайн:** Настройка цветов кнопок, фокуса полей и CSS-классов напрямую из настроек модуля.
-- **Маркетинг:** \* Поддержка целей **Яндекс.Метрики** (JS-событие).
+- **Гибкий дизайн:** Настройка цветов кнопок, фокуса полей и CSS-классов напрямую из настроек модуля. Изолированные CSS/JS файлы.
+- **Маркетинг:**
+  - Поддержка целей **Яндекс.Метрики** (JS-событие).
   - Настраиваемый **редирект** на страницу "Спасибо" после успешной отправки.
 - **Согласие с обработкой данных:** Встроенный чекбокс с редактируемым текстом (соответствие ФЗ-152).
 - **Мультиязычность:** Полная поддержка языковых файлов Joomla (ru-RU, en-GB).
 
 ### 🛠 Зависимости
 
-Модуль работает в связке с плагином [RadicalForm](https://radicalmart.ru/all/radicalform). Убедитесь, что плагин установлен и опубликован.
+Модуль работает в строгой связке с плагином [RadicalForm](https://radicalmart.ru/all/radicalform). Убедитесь, что плагин установлен, опубликован, а в его настройках **разрешена загрузка файлов**.
 
 ### 📦 Установка
 
-1. Скачайте репозиторий или создайте ZIP-архив с содержимым папки модуля.
+1. Скачайте последний релиз (ZIP-архив) со страницы модуля.
 2. В админке Joomla перейдите в **Система -> Установка -> Расширения** (System -> Install -> Extensions).
 3. Загрузите архив.
 
@@ -37,7 +39,8 @@
 Для вызова окна используйте CSS-классы на кнопках или ссылках:
 
 1. **Общий вызов:** класс `bsr-open-modal` (откроет первую найденную форму на странице).
-2. **Точечный вызов:** \* Задайте в настройках модуля **ID формы** (например, `feedback`).
+2. **Точечный вызов:**
+   - Задайте в настройках модуля **ID формы** (например, `feedback`).
    - Используйте класс кнопки `bsr-open-feedback`.
 
 **Пример HTML:**
@@ -54,21 +57,23 @@ Universal modal window module with a dynamic field builder. Designed for quick i
 ### 🚀 Key Features
 
 - **Multiple Forms:** Ability to place several independent forms on one page without JS conflicts.
-- **Field Builder:** Add text fields, phones, emails, dates, and textareas directly via the admin panel.
+- **Field Builder:** Add text fields, phones, emails, dates, textareas, and **files** directly via the admin panel.
+- **File Attachments:** Support for uploading documents, images, and archives. Custom upload button text is easily configured via the _Placeholder_ field.
 - **Dynamic Title:** Automatic substitution of text from the clicked button into the form title and email subject.
-- **Flexible Design:** Customize button colors, field focus, and CSS classes directly from the module settings.
-- **Marketing Tools:** \* Support for **Yandex.Metrica** goals (JS event).
+- **Flexible Design:** Customize button colors, field focus, and CSS classes directly from the module settings. Isolated CSS/JS assets.
+- **Marketing Tools:**
+  - Support for **Yandex.Metrica** goals (JS event).
   - Configurable **redirect** to a "Thank You" page after successful submission.
 - **Data Processing Consent:** Built-in checkbox with editable text (GDPR compliant).
 - **Multilingual:** Full support for Joomla language files (ru-RU, en-GB).
 
 ### 🛠 Dependencies
 
-The module works in conjunction with the [RadicalForm](https://radicalmart.ru/all/radicalform) plugin. Make sure the plugin is installed and enabled on your website.
+The module works in conjunction with the [RadicalForm](https://radicalmart.ru/all/radicalform) plugin. Make sure the plugin is installed, enabled, and **file uploads are allowed** in its settings.
 
 ### 📦 Installation
 
-1. Download the repository or create a ZIP archive with the module folder contents.
+1. Download the latest release (ZIP archive) from the repository page.
 2. In the Joomla admin panel, go to **System -> Install -> Extensions**.
 3. Upload the archive.
 
@@ -78,7 +83,8 @@ The module works in conjunction with the [RadicalForm](https://radicalmart.ru/al
 To call the window, use CSS classes on buttons or links:
 
 1. **General call:** class `bsr-open-modal` (opens the first found form on the page).
-2. **Specific call:** \* Set the **Form ID** in the module settings (for example, `feedback`).
+2. **Specific call:**
+   - Set the **Form ID** in the module settings (for example, `feedback`).
    - Use the button class `bsr-open-feedback`.
 
 **HTML Example:**

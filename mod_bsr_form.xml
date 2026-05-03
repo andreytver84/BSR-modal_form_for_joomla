@@ -5,7 +5,7 @@
     <authorEmail>order@bestsite-studio.ru</authorEmail>
     <authorUrl>https://bestsite-tver.ru</authorUrl>
     <creationDate>2026</creationDate>
-    <version>2.3.1</version>
+    <version>2.4.0</version>
     <description><![CDATA[
         <div style="background: #f4f7f9; padding: 20px; border-left: 5px solid #004E82; border-radius: 4px; font-family: sans-serif; margin-bottom: 20px;">
             <h2 style="margin-top: 0; color: #004E82;">BSR Form — Инструкция</h2>
@@ -30,6 +30,7 @@
         <filename module="mod_bsr_form">mod_bsr_form.php</filename>
         <folder>tmpl</folder>
         <folder>language</folder>
+        <folder>assets</folder>
     </files>
     <config>
         <fields name="params">
@@ -60,6 +61,7 @@
                             <option value="email">MOD_BSR_FORM_OPTION_EMAIL</option>
                             <option value="date">MOD_BSR_FORM_OPTION_DATE</option>
                             <option value="textarea">MOD_BSR_FORM_OPTION_TEXTAREA</option>
+                            <option value="file">MOD_BSR_FORM_OPTION_FILE</option>
                         </field>
                         <field name="f_name" type="text" label="MOD_BSR_FORM_FIELD_F_NAME_LABEL" required="true" />
                         <field name="f_placeholder" type="text" label="MOD_BSR_FORM_FIELD_F_PLACEHOLDER_LABEL" />
