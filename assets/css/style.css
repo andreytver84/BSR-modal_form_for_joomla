@@ -1,4 +1,3 @@
-/* assets/css/style.css */
 .bsr-modal {
   position: fixed !important;
   z-index: 10000 !important;
@@ -78,21 +77,40 @@
   color: var(--bsr-color-focus, #004e82);
 }
 
-/* Кнопки (базовый стиль синий, перекрывается переменными или сторонними классами) */
+/* --- КНОПКИ --- */
+/* 1. Базовый каркас: сетка, отступы, шрифт. Никаких цветов, фонов и рамок! */
 .bsr-form__submit {
   width: 100%;
-  border: none;
   padding: 12px;
   font-weight: 600;
   text-transform: uppercase;
-  border-radius: 4px;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-sizing: border-box;
+  display: block;
+  text-align: center;
+}
+
+/* 2. Наш дизайн по умолчанию для ГЛАВНОЙ кнопки (применяется, если свои классы не заданы) */
+.bsr-form__submit--default.rf-button-send {
   background-color: var(--bsr-color-btn, #004e82);
   color: var(--bsr-color-btn-text, #ffffff);
+  border: none;
+  border-radius: 4px;
 }
-.bsr-form__submit:hover {
+.bsr-form__submit--default.rf-button-send:hover {
   background-color: var(--bsr-color-btn-hover, #00385e);
+}
+
+/* 3. Наш дизайн по умолчанию для кнопки ЗАГРУЗКИ ФАЙЛА (применяется, если свои классы не заданы) */
+.bsr-form__submit--default.bsr-form__upload-btn {
+  background-color: var(--bsr-color-upload-btn, #004e82);
+  color: var(--bsr-color-upload-btn-text, #ffffff);
+  border: none;
+  border-radius: 4px;
+}
+.bsr-form__submit--default.bsr-form__upload-btn:hover {
+  background-color: var(--bsr-color-upload-btn-hover, #00385e);
 }
 
 /* --- СТИЛИ ДЛЯ ЗАГРУЗКИ ФАЙЛОВ --- */
@@ -167,4 +185,52 @@
   font-size: 22px;
   margin-bottom: 10px;
   color: #004e82;
+}
+
+/* --- АДАПТИВНОСТЬ (МОБИЛЬНАЯ ВЕРСИЯ) --- */
+@media (max-width: 768px) {
+  /* Уменьшаем внутренние отступы самого окна */
+  .bsr-modal__content {
+    padding: 20px 15px;
+    border-radius: 6px;
+  }
+
+  /* Крестик закрытия чуть меньше и ближе к краю */
+  .bsr-modal__close {
+    top: 5px;
+    right: 10px;
+    font-size: 24px;
+  }
+
+  /* Заголовок формы меньше */
+  .bsr-form__title {
+    font-size: 18px;
+    margin: 0 0 10px;
+  }
+
+  /* Уменьшаем отступы между полями */
+  .bsr-form__group {
+    margin-bottom: 10px;
+  }
+
+  /* Поля ввода и кнопки: меньше внутренний отступ (padding) */
+  .bsr-form__input,
+  .bsr-form__submit,
+  .bsr-form__input--file {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  /* Textarea делаем чуть ниже */
+  .bsr-form__input--textarea {
+    min-height: 50px;
+  }
+
+  /* Сообщение об успехе: отступы и размер шрифта */
+  .bsr-success {
+    padding: 15px 5px;
+  }
+  .bsr-success__title {
+    font-size: 18px;
+  }
 }

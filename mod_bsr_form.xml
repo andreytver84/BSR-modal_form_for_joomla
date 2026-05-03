@@ -5,7 +5,7 @@
     <authorEmail>order@bestsite-studio.ru</authorEmail>
     <authorUrl>https://bestsite-tver.ru</authorUrl>
     <creationDate>2026</creationDate>
-    <version>2.4.0</version>
+    <version>2.4.1</version>
     <description><![CDATA[
         <div style="background: #f4f7f9; padding: 20px; border-left: 5px solid #004E82; border-radius: 4px; font-family: sans-serif; margin-bottom: 20px;">
             <h2 style="margin-top: 0; color: #004E82;">BSR Form — Инструкция</h2>
@@ -79,6 +79,7 @@
                 <field name="form_id" type="text" label="MOD_BSR_FORM_FIELD_FORM_ID_LABEL" description="MOD_BSR_FORM_FIELD_FORM_ID_DESC" default="" />
                 <field name="form_class" type="text" label="MOD_BSR_FORM_FIELD_FORM_CLASS_LABEL" default="" />
                 <field name="btn_class" type="text" label="MOD_BSR_FORM_FIELD_BTN_CLASS_LABEL" default="" />
+                <field name="upload_btn_class" type="text" label="MOD_BSR_FORM_FIELD_UPLOAD_BTN_CLASS_LABEL" default="" />
                 <field name="color_btn" type="color" label="MOD_BSR_FORM_FIELD_COLOR_BTN_LABEL" default="" />
                 <field name="color_btn_hover" type="color" label="MOD_BSR_FORM_FIELD_COLOR_BTN_HOVER_LABEL" default="" />
                 <field name="color_focus" type="color" label="MOD_BSR_FORM_FIELD_COLOR_FOCUS_LABEL" default="" />
