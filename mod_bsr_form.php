@@ -33,6 +33,7 @@ $ymGoal = $params->get('ym_goal', '');
 $formIdRaw = $params->get('form_id', '');
 $formClass = $params->get('form_class', '');
 $btnClass = $params->get('btn_class', '');
+$uploadBtnClass = $params->get('upload_btn_class', '');
 $colorBtn = $params->get('color_btn', '');
 $colorBtnHover = $params->get('color_btn_hover', '');
 $colorFocus = $params->get('color_focus', '');
