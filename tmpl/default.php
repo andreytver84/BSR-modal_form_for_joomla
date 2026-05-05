@@ -45,8 +45,7 @@ $mainBtnMod = empty($btnClass) ? 'bsr-form__submit--default' : $btnClass;
                     $item = (array) $field;
                     $type = !empty($item['f_type']) ? (string) $item['f_type'] : 'text';
                     $name = !empty($item['f_name']) ? (string) $item['f_name'] : '';
-                    if (!$name)
-                        continue;
+                    if (!$name) continue;
 
                     $placeholderSafe = !empty($item['f_placeholder']) ? htmlspecialchars((string) $item['f_placeholder'], ENT_QUOTES, 'UTF-8') : '';
                     $required = !empty($item['f_required']) ? 'required' : '';
@@ -65,24 +64,29 @@ $mainBtnMod = empty($btnClass) ? 'bsr-form__submit--default' : $btnClass;
                                     <button type="button"
                                         class="bsr-form__submit bsr-form__upload-btn rf-upload-button-text <?php echo htmlspecialchars((string) $uploadBtnMod, ENT_QUOTES, 'UTF-8'); ?>"
                                         tabindex="-1"><?php echo $placeholderSafe; ?></button>
-                                        <input class="rf-upload-button"
-                                            name="<?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?>" type="file"
-                                            accept=".zip,.tar,.rar,.jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx" <?php echo $required; ?>>
+                                    <input class="rf-upload-button"
+                                        name="<?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?>" type="file"
+                                        accept=".zip,.tar,.rar,.jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx" <?php echo $required; ?>>
                                 </div>
                             <?php else: ?>
-                                <input
-                                    class="rf-upload-button bsr-form__input--file <?php echo htmlspecialchars((string) $uploadBtnMod, ENT_QUOTES, 'UTF-8'); ?>"
+                                <input class="rf-upload-button bsr-form__input--file <?php echo htmlspecialchars((string) $uploadBtnMod, ENT_QUOTES, 'UTF-8'); ?>"
                                     name="<?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?>" type="file"
                                     accept=".zip,.tar,.rar,.jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx" <?php echo $required; ?>>
                             <?php endif; ?>
 
+                        <?php elseif ($type === 'tel'): ?>
+                            <!-- НОВЫЙ БЛОК ДЛЯ ТЕЛЕФОНА С ПОДДЕРЖКОЙ МАСКИ -->
+                            <input class="bsr-form__input bsr-form__input--tel <?php echo ($enablePhoneMask ? 'js-bsr-phone-mask' : ''); ?>"
+                                type="tel" name="<?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?>"
+                                placeholder="<?php echo $placeholderSafe; ?>" <?php echo $required; ?>
+                                <?php echo ($enablePhoneMask ? 'data-mask="' . htmlspecialchars((string)$phoneMaskFormat, ENT_QUOTES, 'UTF-8') . '"' : ''); ?>>
+
                         <?php else: ?>
-                            <input
-                                class="bsr-form__input bsr-form__input--<?php echo htmlspecialchars($type, ENT_QUOTES, 'UTF-8'); ?>"
+                            <input class="bsr-form__input bsr-form__input--<?php echo htmlspecialchars($type, ENT_QUOTES, 'UTF-8'); ?>"
                                 type="<?php echo ($type === 'date' ? 'text' : htmlspecialchars($type, ENT_QUOTES, 'UTF-8')); ?>"
                                 name="<?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?>"
-                                placeholder="<?php echo $placeholderSafe; ?>" <?php echo $required; ?>             <?php if ($type === 'date')
-                                                       echo 'onfocus="(this.type=\'date\')" onblur="if(!this.value)this.type=\'text\'"'; ?>>
+                                placeholder="<?php echo $placeholderSafe; ?>" <?php echo $required; ?> 
+                                <?php if ($type === 'date') echo 'onfocus="(this.type=\'date\')" onblur="if(!this.value)this.type=\'text\'"'; ?>>
                         <?php endif; ?>
 
                         <?php if ($required): ?>
