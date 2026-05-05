@@ -15,8 +15,8 @@ use Joomla\CMS\Factory;
 
 // 1. Подключаем статические стили и скрипты
 $doc = Joomla\CMS\Factory::getDocument();
-$doc->addStyleSheet(Uri::root(true) . '/modules/mod_bsr_form/assets/css/style.css', ['version' => '2.5.0']);
-$doc->addScript(Uri::root(true) . '/modules/mod_bsr_form/assets/js/script.js', ['version' => '2.5.0']);
+$doc->addStyleSheet(Uri::root(true) . '/modules/mod_bsr_form/assets/css/style.css', ['version' => '2.5.1']);
+$doc->addScript(Uri::root(true) . '/modules/mod_bsr_form/assets/js/script.js', ['version' => '2.5.1']);
 
 
 // 2. Базовые настройки / Basic settings
@@ -50,7 +50,7 @@ $hasPhoneField = false;
 if (!empty($formFields)) {
     foreach ($formFields as $field) {
         $item = (array) $field;
-        if (!empty($item['f_type']) && $item['f_type'] === 'phone') {
+        if (!empty($item['f_type']) && $item['f_type'] === 'tel') {
             $hasPhoneField = true;
             break;
         }
