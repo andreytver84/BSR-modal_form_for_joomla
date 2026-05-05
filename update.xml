@@ -12,12 +12,9 @@
          
             <downloadurl type="full" format="zip">https://github.com/andreytver84/BSR-modal_form_for_joomla/releases/download/v2.5.0/mod_bsr_modal_v2.5.0.zip</downloadurl>
         </downloads>
-        <tags>
-           
-            <tag>4.0</tag>
-            <tag>5.0</tag>
-        </tags>
+        
         <maintainer>Andrey Uvikov</maintainer>
         <maintainerurl>https://bestsite-tver.ru</maintainerurl>
+        <targetplatform name="joomla" version="^[4-9]" />
     </update>
 </updates>
