@@ -81,6 +81,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 2. ИНИЦИАЛИЗАЦИЯ ОТКРЫТИЯ/ЗАКРЫТИЯ ОКОН ---
     const bsrModals = document.querySelectorAll('.bsr-modal');
 
+    // --- 3. ИНИЦИАЛИЗАЦИЯ МАСКИ ТЕЛЕФОНА ---
+    // Проверяем, загружена ли библиотека IMask
+    if (typeof IMask !== 'undefined') {
+        const phoneInputs = document.querySelectorAll('.js-bsr-phone-mask');
+
+        phoneInputs.forEach(input => {
+            const maskPattern = input.getAttribute('data-mask');
+            if (maskPattern) {
+                IMask(input, {
+                    mask: maskPattern,
+                    lazy: false, // Показывать маску сразу при фокусе (опционально)
+                    placeholderChar: '_'
+                });
+            }
+        });
+    }
+
     bsrModals.forEach(formModal => {
         const modalId = formModal.id;
         const form = formModal.querySelector('.bsr-form');

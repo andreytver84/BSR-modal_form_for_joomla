@@ -14,13 +14,15 @@
 
 - **Множественные формы:** Возможность размещать несколько независимых форм на одной странице без конфликтов JS.
 - **Конструктор полей:** Добавление текстовых полей, телефонов, email, дат, текстовых областей и **файлов** через админку.
+- **Умная маска телефона:** Встроенная поддержка библиотеки IMask.js (загружается только при необходимости). Позволяет задать строгий формат номера (например, для РФ `+7 (000) 000-00-00` или международный) и блокирует ввод лишних символов.
 - **Прикрепление файлов:** Поддержка загрузки документов, изображений и архивов. Свой текст кнопки загрузки легко настраивается через поле _Placeholder_.
 - **Динамический заголовок:** Автоматическая подстановка текста из нажатой кнопки в заголовок формы и тему письма.
-- **Гибкий дизайн:** Настройка цветов кнопок, фокуса полей и CSS-классов напрямую из настроек модуля. Изолированные CSS/JS файлы.
+- **Гибкий дизайн:** Настройка цветов кнопок, фокуса полей и CSS-классов напрямую из настроек модуля. Изолированные CSS/JS файлы не ломают стили вашего шаблона.
 - **Маркетинг:**
   - Поддержка целей **Яндекс.Метрики** (JS-событие).
   - Настраиваемый **редирект** на страницу "Спасибо" после успешной отправки.
 - **Согласие с обработкой данных:** Встроенный чекбокс с редактируемым текстом (соответствие ФЗ-152).
+- **Автоматические обновления (Update Server):** Модуль интегрирован в штатную систему обновлений Joomla. Уведомления о новых версиях и их установка происходят прямо из админ-панели в один клик.
 - **Мультиязычность:** Полная поддержка языковых файлов Joomla (ru-RU, en-GB).
 
 ### 🛠 Зависимости
@@ -32,6 +34,7 @@
 1. Скачайте последний релиз (ZIP-архив) со страницы модуля.
 2. В админке Joomla перейдите в **Система -> Установка -> Расширения** (System -> Install -> Extensions).
 3. Загрузите архив.
+   _(В дальнейшем обновления будут приходить автоматически)._
 
 ### 💡 Использование
 
@@ -58,13 +61,15 @@ Universal modal window module with a dynamic field builder. Designed for quick i
 
 - **Multiple Forms:** Ability to place several independent forms on one page without JS conflicts.
 - **Field Builder:** Add text fields, phones, emails, dates, textareas, and **files** directly via the admin panel.
+- **Smart Phone Mask:** Built-in IMask.js support (loads conditionally). Allows setting strict phone formats (e.g., `+{7} (000) 000-00-00` or international) and blocks invalid characters.
 - **File Attachments:** Support for uploading documents, images, and archives. Custom upload button text is easily configured via the _Placeholder_ field.
 - **Dynamic Title:** Automatic substitution of text from the clicked button into the form title and email subject.
-- **Flexible Design:** Customize button colors, field focus, and CSS classes directly from the module settings. Isolated CSS/JS assets.
+- **Flexible Design:** Customize button colors, field focus, and CSS classes directly from the module settings. Isolated CSS/JS assets prevent template conflicts.
 - **Marketing Tools:**
   - Support for **Yandex.Metrica** goals (JS event).
   - Configurable **redirect** to a "Thank You" page after successful submission.
 - **Data Processing Consent:** Built-in checkbox with editable text (GDPR compliant).
+- **Automatic Updates:** Integrated with Joomla's native update system. Get notified about new versions and install them with one click directly from the admin panel.
 - **Multilingual:** Full support for Joomla language files (ru-RU, en-GB).
 
 ### 🛠 Dependencies
@@ -76,6 +81,7 @@ The module works in conjunction with the [RadicalForm](https://radicalmart.ru/al
 1. Download the latest release (ZIP archive) from the repository page.
 2. In the Joomla admin panel, go to **System -> Install -> Extensions**.
 3. Upload the archive.
+   _(Future updates will be delivered automatically)._
 
 ### 💡 Usage
 
