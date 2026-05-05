@@ -86,4 +86,7 @@
             </fieldset>
         </fields>
     </config>
+    <updateservers>
+        <server type="extension" priority="1" name="BSR Form Update Server">https://raw.githubusercontent.com/andreytver84/BSR-modal_form_for_joomla/refs/heads/main/update.xml</server>
+    </updateservers>
 </extension>
