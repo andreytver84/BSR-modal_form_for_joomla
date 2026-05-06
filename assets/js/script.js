@@ -82,18 +82,72 @@ document.addEventListener('DOMContentLoaded', () => {
     const bsrModals = document.querySelectorAll('.bsr-modal');
 
     // --- 3. ИНИЦИАЛИЗАЦИЯ МАСКИ ТЕЛЕФОНА ---
-    // Проверяем, загружена ли библиотека IMask
     if (typeof IMask !== 'undefined') {
         const phoneInputs = document.querySelectorAll('.js-bsr-phone-mask');
 
         phoneInputs.forEach(input => {
             const maskPattern = input.getAttribute('data-mask');
             if (maskPattern) {
-                IMask(input, {
+                // Инициализация маски (видимая всегда)
+                const mask = IMask(input, {
                     mask: maskPattern,
-                    lazy: false, // Показывать маску сразу при фокусе (опционально)
+                    lazy: false,
                     placeholderChar: '_'
                 });
+
+                const form = input.closest('form');
+                const isRequired = input.hasAttribute('required');
+
+                // Универсальная функция валидации
+                const validatePhone = () => {
+                    const isEmpty = mask.unmaskedValue === '';
+                    const isComplete = mask.masked.isComplete;
+
+                    // 1. Обязательно, но не заполнено (или заполнено не до конца)
+                    if (isRequired && !isComplete) {
+                        input.setCustomValidity('Пожалуйста, введите номер полностью.');
+                    }
+                    // 2. Необязательно, но начали вводить и бросили на половине
+                    else if (!isRequired && !isEmpty && !isComplete) {
+                        input.setCustomValidity('Пожалуйста, введите номер полностью.');
+                    }
+                    // 3. Всё правильно (ввели полностью или оставили пустым необязательное)
+                    else {
+                        input.setCustomValidity('');
+                    }
+                };
+
+                // ВАЖНО: Запускаем проверку СРАЗУ при открытии окна!
+                // Это заблокирует кнопку "Отправить" на нативном уровне браузера.
+                validatePhone();
+
+                // Проверяем при каждом введенном символе
+                mask.on('accept', validatePhone);
+
+                if (form) {
+                    // Перехватываем клик по кнопке отправки
+                    const submitBtn = form.querySelector('[type="submit"], .bsr-form__submit');
+                    if (submitBtn) {
+                        submitBtn.addEventListener('click', () => {
+                            validatePhone(); // Перепроверяем на всякий случай
+
+                            // Если поле НЕ обязательное и мы его не заполняли, 
+                            // стираем маску перед самой отправкой, чтобы на почту пришла пустота
+                            if (!isRequired && mask.unmaskedValue === '') {
+                                input.value = '';
+                            }
+                        });
+                    }
+
+                    // Восстанавливаем всё после успешной отправки (сброс от RadicalForm)
+                    form.addEventListener('reset', () => {
+                        setTimeout(() => {
+                            mask.value = '';
+                            mask.updateValue();
+                            validatePhone(); // Снова блокируем для следующей отправки
+                        }, 10);
+                    });
+                }
             }
         });
     }
