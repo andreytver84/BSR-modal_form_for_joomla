@@ -65,4 +65,39 @@
                         <field name="f_type" type="list" label="MOD_BSR_FORM_FIELD_F_TYPE_LABEL" default="text">
                             <option value="text">MOD_BSR_FORM_OPTION_TEXT</option>
                             <option value="tel">MOD_BSR_FORM_OPTION_TEL</option>
-                            <option value="email">MOD
+                            <option value="email">MOD_BSR_FORM_OPTION_EMAIL</option>
+                            <option value="date">MOD_BSR_FORM_OPTION_DATE</option>
+                            <option value="textarea">MOD_BSR_FORM_OPTION_TEXTAREA</option>
+                            <option value="file">MOD_BSR_FORM_OPTION_FILE</option>
+                            <option value="select">MOD_BSR_FORM_OPTION_SELECT</option>
+                        </field>
+                        <field name="f_name" type="text" label="MOD_BSR_FORM_FIELD_F_NAME_LABEL" required="true" />
+                        <field name="f_placeholder" type="text" label="MOD_BSR_FORM_FIELD_F_PLACEHOLDER_LABEL" />
+                        
+                        <field name="f_options" type="textarea" rows="4" label="MOD_BSR_FORM_FIELD_F_OPTIONS_LABEL" description="MOD_BSR_FORM_FIELD_F_OPTIONS_DESC" showon="f_type:select" />
+                        
+                        <field name="f_required" type="radio" layout="joomla.form.field.radio.switcher" label="MOD_BSR_FORM_FIELD_F_REQUIRED_LABEL" default="0">
+                            <option value="0">JNO</option>
+                            <option value="1">JYES</option>
+                        </field>
+                        
+                        <field name="f_error" type="text" label="MOD_BSR_FORM_FIELD_F_ERROR_LABEL" default="MOD_BSR_FORM_DEFAULT_F_ERROR" translate_default="true" />
+                    </form>
+                </field>
+            </fieldset>
+
+            <fieldset name="advanced" label="MOD_BSR_FORM_FIELDSET_ADVANCED_LABEL">
+                <field name="form_id" type="text" label="MOD_BSR_FORM_FIELD_FORM_ID_LABEL" description="MOD_BSR_FORM_FIELD_FORM_ID_DESC" default="" />
+                <field name="form_class" type="text" label="MOD_BSR_FORM_FIELD_FORM_CLASS_LABEL" default="" />
+                <field name="btn_class" type="text" label="MOD_BSR_FORM_FIELD_BTN_CLASS_LABEL" default="" />
+                <field name="upload_btn_class" type="text" label="MOD_BSR_FORM_FIELD_UPLOAD_BTN_CLASS_LABEL" default="" />
+                <field name="color_btn" type="color" label="MOD_BSR_FORM_FIELD_COLOR_BTN_LABEL" default="" />
+                <field name="color_btn_hover" type="color" label="MOD_BSR_FORM_FIELD_COLOR_BTN_HOVER_LABEL" default="" />
+                <field name="color_focus" type="color" label="MOD_BSR_FORM_FIELD_COLOR_FOCUS_LABEL" default="" />
+            </fieldset>
+        </fields>
+    </config>
+    <updateservers>
+        <server type="extension" priority="1" name="BSR Form Update Server">https://raw.githubusercontent.com/andreytver84/BSR-modal_form_for_joomla/main/update.xml</server>
+    </updateservers>
+</extension>
