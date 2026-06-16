@@ -1,4 +1,4 @@
-# BSR Form — Универсальная всплывающая форма для Joomla 4/5 / Universal Pop-up Form for Joomla 4/5
+# BSR Form — Универсальная всплывающая форма для Joomla 4/5/6 / Universal Pop-up Form for Joomla 4/5/6
 
 [🇷🇺 Русский](#ру-русский) | [🇬🇧 English](#en-english)
 
@@ -13,7 +13,7 @@
 ### 🚀 Основные возможности
 
 - **Множественные формы:** Возможность размещать несколько независимых форм на одной странице без конфликтов JS.
-- **Конструктор полей:** Добавление текстовых полей, телефонов, email, дат, текстовых областей и **файлов** через админку.
+- **Конструктор полей:** Добавление текстовых полей, телефонов, email, дат, текстовых областей, **выпадающих списков (select)** и **файлов** через админку.
 - **Умная маска телефона:** Встроенная поддержка библиотеки IMask.js (загружается только при необходимости). Позволяет задать строгий формат номера (например, для РФ `+7 (000) 000-00-00` или международный) и блокирует ввод лишних символов.
 - **Прикрепление файлов:** Поддержка загрузки документов, изображений и архивов. Свой текст кнопки загрузки легко настраивается через поле _Placeholder_.
 - **Динамический заголовок:** Автоматическая подстановка текста из нажатой кнопки в заголовок формы и тему письма.
@@ -60,7 +60,7 @@ Universal modal window module with a dynamic field builder. Designed for quick i
 ### 🚀 Key Features
 
 - **Multiple Forms:** Ability to place several independent forms on one page without JS conflicts.
-- **Field Builder:** Add text fields, phones, emails, dates, textareas, and **files** directly via the admin panel.
+- **Field Builder:** Add text fields, phones, emails, dates, textareas, **dropdowns (select)**, and **files** directly via the admin panel.
 - **Smart Phone Mask:** Built-in IMask.js support (loads conditionally). Allows setting strict phone formats (e.g., `+{7} (000) 000-00-00` or international) and blocks invalid characters.
 - **File Attachments:** Support for uploading documents, images, and archives. Custom upload button text is easily configured via the _Placeholder_ field.
 - **Dynamic Title:** Automatic substitution of text from the clicked button into the form title and email subject.

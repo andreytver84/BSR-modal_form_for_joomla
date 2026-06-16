@@ -16,7 +16,6 @@ if ($colorBtnHover) {
 }
 $styleAttr = !empty($inlineStyles) ? 'style="' . implode(' ', $inlineStyles) . '"' : '';
 
-
 $uploadBtnMod = empty($uploadBtnClass) ? 'bsr-form__submit--default' : $uploadBtnClass;
 $mainBtnMod = empty($btnClass) ? 'bsr-form__submit--default' : $btnClass;
 ?>
@@ -75,11 +74,26 @@ $mainBtnMod = empty($btnClass) ? 'bsr-form__submit--default' : $btnClass;
                             <?php endif; ?>
 
                         <?php elseif ($type === 'tel'): ?>
-                            <!-- НОВЫЙ БЛОК ДЛЯ ТЕЛЕФОНА С ПОДДЕРЖКОЙ МАСКИ -->
                             <input class="bsr-form__input bsr-form__input--tel <?php echo ($enablePhoneMask ? 'js-bsr-phone-mask' : ''); ?>"
                                 type="tel" name="<?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?>"
                                 placeholder="<?php echo $placeholderSafe; ?>" <?php echo $required; ?>
                                 <?php echo ($enablePhoneMask ? 'data-mask="' . htmlspecialchars((string)$phoneMaskFormat, ENT_QUOTES, 'UTF-8') . '"' : ''); ?>>
+
+                        <?php elseif ($type === 'select'): ?>
+                            <?php
+                            $rawOptions = !empty($item['f_options']) ? (string) $item['f_options'] : '';
+                            $optionsList = array_filter(array_map('trim', explode("\n", $rawOptions)));
+                            ?>
+                            <select class="bsr-form__input bsr-form__input--select" name="<?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $required; ?>>
+                                <?php if ($placeholderSafe): ?>
+                                    <option value="" disabled selected><?php echo $placeholderSafe; ?></option>
+                                <?php endif; ?>
+                                <?php foreach ($optionsList as $opt): ?>
+                                    <option value="<?php echo htmlspecialchars($opt, ENT_QUOTES, 'UTF-8'); ?>">
+                                        <?php echo htmlspecialchars($opt, ENT_QUOTES, 'UTF-8'); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
 
                         <?php else: ?>
                             <input class="bsr-form__input bsr-form__input--<?php echo htmlspecialchars($type, ENT_QUOTES, 'UTF-8'); ?>"

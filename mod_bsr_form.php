@@ -15,8 +15,8 @@ use Joomla\CMS\Factory;
 
 // 1. Подключаем статические стили и скрипты
 $doc = Joomla\CMS\Factory::getDocument();
-$doc->addStyleSheet(Uri::root(true) . '/modules/mod_bsr_form/assets/css/style.css', ['version' => '2.5.1']);
-$doc->addScript(Uri::root(true) . '/modules/mod_bsr_form/assets/js/script.js', ['version' => '2.5.1']);
+$doc->addStyleSheet(Uri::root(true) . '/modules/mod_bsr_form/assets/css/style.css', ['version' => '2.6.0']);
+$doc->addScript(Uri::root(true) . '/modules/mod_bsr_form/assets/js/script.js', ['version' => '2.6.0']);
 
 
 // 2. Базовые настройки / Basic settings
