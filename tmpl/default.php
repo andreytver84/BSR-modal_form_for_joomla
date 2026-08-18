@@ -1,29 +1,30 @@
 <?php
 defined('_JEXEC') or die;
+
 use Joomla\CMS\Language\Text;
 
-// Генерируем CSS-переменные для кастомных цветов из админки
 $inlineStyles = [];
 if ($colorFocus) {
-    $inlineStyles[] = "--bsr-color-focus: " . htmlspecialchars((string) $colorFocus, ENT_QUOTES, 'UTF-8') . ";";
-    $inlineStyles[] = "--bsr-color-focus-shadow: " . htmlspecialchars((string) $colorFocus, ENT_QUOTES, 'UTF-8') . "33;";
+    $inlineStyles[] = '--bsr-color-focus: ' . htmlspecialchars($colorFocus, ENT_QUOTES, 'UTF-8') . ';';
+    $inlineStyles[] = '--bsr-color-focus-shadow: ' . htmlspecialchars($colorFocus, ENT_QUOTES, 'UTF-8') . '33;';
 }
 if ($colorBtn) {
-    $inlineStyles[] = "--bsr-color-btn: " . htmlspecialchars((string) $colorBtn, ENT_QUOTES, 'UTF-8') . ";";
+    $inlineStyles[] = '--bsr-color-btn: ' . htmlspecialchars($colorBtn, ENT_QUOTES, 'UTF-8') . ';';
 }
 if ($colorBtnHover) {
-    $inlineStyles[] = "--bsr-color-btn-hover: " . htmlspecialchars((string) $colorBtnHover, ENT_QUOTES, 'UTF-8') . ";";
+    $inlineStyles[] = '--bsr-color-btn-hover: ' . htmlspecialchars($colorBtnHover, ENT_QUOTES, 'UTF-8') . ';';
 }
 $styleAttr = !empty($inlineStyles) ? 'style="' . implode(' ', $inlineStyles) . '"' : '';
 
-$uploadBtnMod = empty($uploadBtnClass) ? 'bsr-form__submit--default' : $uploadBtnClass;
-$mainBtnMod = empty($btnClass) ? 'bsr-form__submit--default' : $btnClass;
+$uploadBtnMod = $uploadBtnClass === '' ? 'bsr-form__submit--default' : $uploadBtnClass;
+$mainBtnMod = $btnClass === '' ? 'bsr-form__submit--default' : $btnClass;
+$allowedTypes = ['text', 'tel', 'email', 'date', 'textarea', 'file', 'select'];
 ?>
 
 <div id="<?php echo htmlspecialchars((string) $uniqueModalId, ENT_QUOTES, 'UTF-8'); ?>"
     class="bsr-modal bsr-modal--hidden" <?php echo $styleAttr; ?>>
     <div class="bsr-modal__content">
-        <a class="bsr-modal__close"
+        <a class="bsr-modal__close" href="#" role="button"
             title="<?php echo htmlspecialchars((string) Text::_('MOD_BSR_FORM_TXT_CLOSE'), ENT_QUOTES, 'UTF-8'); ?>">&times;</a>
 
         <form class="bsr-form <?php echo htmlspecialchars((string) $formClass, ENT_QUOTES, 'UTF-8'); ?>"
@@ -43,8 +44,14 @@ $mainBtnMod = empty($btnClass) ? 'bsr-form__submit--default' : $btnClass;
                     <?php
                     $item = (array) $field;
                     $type = !empty($item['f_type']) ? (string) $item['f_type'] : 'text';
-                    $name = !empty($item['f_name']) ? (string) $item['f_name'] : '';
-                    if (!$name) continue;
+                    if (!in_array($type, $allowedTypes, true)) {
+                        $type = 'text';
+                    }
+
+                    $name = !empty($item['f_name']) ? preg_replace('/[^A-Za-z0-9_-]/', '', (string) $item['f_name']) : '';
+                    if ($name === '') {
+                        continue;
+                    }
 
                     $placeholderSafe = !empty($item['f_placeholder']) ? htmlspecialchars((string) $item['f_placeholder'], ENT_QUOTES, 'UTF-8') : '';
                     $required = !empty($item['f_required']) ? 'required' : '';
@@ -77,7 +84,10 @@ $mainBtnMod = empty($btnClass) ? 'bsr-form__submit--default' : $btnClass;
                             <input class="bsr-form__input bsr-form__input--tel <?php echo ($enablePhoneMask ? 'js-bsr-phone-mask' : ''); ?>"
                                 type="tel" name="<?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?>"
                                 placeholder="<?php echo $placeholderSafe; ?>" <?php echo $required; ?>
-                                <?php echo ($enablePhoneMask ? 'data-mask="' . htmlspecialchars((string)$phoneMaskFormat, ENT_QUOTES, 'UTF-8') . '"' : ''); ?>>
+                                <?php if ($enablePhoneMask): ?>
+                                    data-mask="<?php echo htmlspecialchars((string) $phoneMaskFormat, ENT_QUOTES, 'UTF-8'); ?>"
+                                    data-phone-error="<?php echo htmlspecialchars((string) $phoneErrorText, ENT_QUOTES, 'UTF-8'); ?>"
+                                <?php endif; ?>>
 
                         <?php elseif ($type === 'select'): ?>
                             <?php
@@ -99,7 +109,7 @@ $mainBtnMod = empty($btnClass) ? 'bsr-form__submit--default' : $btnClass;
                             <input class="bsr-form__input bsr-form__input--<?php echo htmlspecialchars($type, ENT_QUOTES, 'UTF-8'); ?>"
                                 type="<?php echo ($type === 'date' ? 'text' : htmlspecialchars($type, ENT_QUOTES, 'UTF-8')); ?>"
                                 name="<?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?>"
-                                placeholder="<?php echo $placeholderSafe; ?>" <?php echo $required; ?> 
+                                placeholder="<?php echo $placeholderSafe; ?>" <?php echo $required; ?>
                                 <?php if ($type === 'date') echo 'onfocus="(this.type=\'date\')" onblur="if(!this.value)this.type=\'text\'"'; ?>>
                         <?php endif; ?>
 
@@ -121,7 +131,7 @@ $mainBtnMod = empty($btnClass) ? 'bsr-form__submit--default' : $btnClass;
             <div class="bsr-form__group bsr-form__group--checkbox">
                 <div class="bsr-form__checkbox-wrapper">
                     <?php $chkId = 'rf_chk_' . htmlspecialchars($uniqueModalId, ENT_QUOTES, 'UTF-8'); ?>
-                    <input class="bsr-form__checkbox" type="checkbox" name="acception" value="agree" required checked
+                    <input class="bsr-form__checkbox" type="checkbox" name="acception" value="agree" required
                         id="<?php echo $chkId; ?>">
                     <label class="bsr-form__label" for="<?php echo $chkId; ?>"><?php echo $agreementText; ?></label>
                 </div>

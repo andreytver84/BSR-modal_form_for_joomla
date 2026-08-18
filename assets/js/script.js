@@ -1,189 +1,269 @@
 /* assets/js/script.js */
 document.addEventListener('DOMContentLoaded', () => {
-    // --- 1. ПЕРЕХВАТЧИК AJAX ЗАПРОСОВ ---
-    const oldSend = XMLHttpRequest.prototype.send;
-
-    XMLHttpRequest.prototype.send = function (data) {
-        let isFinalSubmit = false;
-
-        // УМНАЯ ПРОВЕРКА: Смотрим, что именно сейчас отправляется на сервер
-        // Если внутри запроса есть поле 'rfSubject' (наше скрытое поле), значит отправляется вся форма.
-        // Если его нет - значит RadicalForm просто в фоне загружает прикрепленный файл.
-        if (data instanceof FormData) {
-            if (data.has('rfSubject') || data.has('acception')) {
-                isFinalSubmit = true;
-            }
-        } else if (typeof data === 'string' && (data.includes('rfSubject=') || data.includes('acception='))) {
-            isFinalSubmit = true;
+    const isSafeRedirect = (url) => {
+        if (!url || typeof url !== 'string') {
+            return false;
         }
 
-        this.addEventListener('load', () => {
-            // Слушаем только успешные ответы от плагина RadicalForm
-            if (this.responseURL.includes('radicalform') && this.status === 200) {
+        const trimmed = url.trim();
 
-                // Если это была просто фоновая загрузка файла - ничего не закрываем, ждем дальше!
-                if (!isFinalSubmit) return;
+        if (!trimmed.startsWith('/') || trimmed.startsWith('//') || trimmed.includes('\\')) {
+            return false;
+        }
 
-                // Ищем открытое модальное окно
+        const lower = trimmed.toLowerCase();
+
+        return !lower.includes('javascript:') && !lower.includes('data:') && !lower.includes('vbscript:');
+    };
+
+    const getMetrikaCounterIds = () => {
+        const ids = [];
+
+        try {
+            if (window.Ya && Ya._metrika && typeof Ya._metrika.getCounters === 'function') {
+                (Ya._metrika.getCounters() || []).forEach((counter) => {
+                    if (counter && counter.id) {
+                        ids.push(counter.id);
+                    }
+                });
+            }
+        } catch (e) { }
+
+        if (!ids.length && typeof ym !== 'undefined' && Array.isArray(ym.a)) {
+            ym.a.forEach((args) => {
+                if (args && args[0]) {
+                    ids.push(args[0]);
+                }
+            });
+        }
+
+        return ids;
+    };
+
+    const reachYmGoal = (goalId) => {
+        if (!goalId || typeof ym !== 'function') {
+            return;
+        }
+
+        const counterIds = getMetrikaCounterIds();
+
+        if (!counterIds.length) {
+            return;
+        }
+
+        counterIds.forEach((id) => {
+            try {
+                ym(id, 'reachGoal', goalId);
+            } catch (e) { }
+        });
+    };
+
+    const cssEscape = (value) => {
+        if (window.CSS && typeof CSS.escape === 'function') {
+            return CSS.escape(value);
+        }
+
+        return String(value).replace(/[^A-Za-z0-9_-]/g, '\\$&');
+    };
+
+    if (!window.__bsrFormXhrPatched) {
+        window.__bsrFormXhrPatched = true;
+
+        const oldSend = XMLHttpRequest.prototype.send;
+
+        XMLHttpRequest.prototype.send = function (data) {
+            let isFinalSubmit = false;
+
+            if (data instanceof FormData) {
+                if (data.has('rfSubject') || data.has('acception')) {
+                    isFinalSubmit = true;
+                }
+            } else if (typeof data === 'string' && (data.includes('rfSubject=') || data.includes('acception='))) {
+                isFinalSubmit = true;
+            }
+
+            this.addEventListener('load', () => {
+                if (!this.responseURL || this.responseURL.indexOf('radicalform') === -1 || this.status !== 200) {
+                    return;
+                }
+
+                if (!isFinalSubmit) {
+                    return;
+                }
+
                 const activeModal = document.querySelector('.bsr-modal:not(.bsr-modal--hidden)');
-                if (!activeModal) return;
+                if (!activeModal) {
+                    return;
+                }
+
                 const form = activeModal.querySelector('.bsr-form');
-                if (!form) return;
+                if (!form) {
+                    return;
+                }
+
+                let res;
 
                 try {
-                    const res = JSON.parse(this.responseText);
-                    // Серверная валидация: если плагин вернул ошибку - прерываем процесс, 
-                    // чтобы плагин мог показать красные предупреждения под полями.
-                    if (res.error || res.success === false || (res.messages && res.messages.error)) {
-                        return;
-                    }
-                } catch (e) { }
+                    res = JSON.parse(this.responseText);
+                } catch (e) {
+                    return;
+                }
 
-                // --- ЕСЛИ ОШИБОК НЕТ, ФОРМА УСПЕШНО ОТПРАВЛЕНА ---
+                if (!res || res.error || res.success === false || (res.messages && res.messages.error)) {
+                    return;
+                }
+
                 const successBox = activeModal.querySelector('.bsr-success');
                 const redirectUrl = form.getAttribute('data-redirect');
                 const goalId = form.getAttribute('data-goal');
 
-                // Отправка в Яндекс Метрику
-                if (goalId && typeof ym !== 'undefined') {
-                    try { ym.apply(null, [null, 'reachGoal', goalId]); } catch (e) { }
-                }
+                reachYmGoal(goalId);
 
-                // Логика завершения
-                if (redirectUrl) {
+                if (isSafeRedirect(redirectUrl)) {
                     window.location.href = redirectUrl;
-                } else {
-                    // Прячем форму, показываем "Отлично! Заявка принята"
-                    if (successBox) successBox.style.display = "block";
-                    form.style.display = "none";
-
-                    // Через 3 секунды закрываем окно
-                    setTimeout(() => {
-                        activeModal.classList.add('bsr-modal--hidden');
-                        setTimeout(() => {
-                            // Возвращаем форму в исходное состояние (чтобы ее можно было открыть снова)
-                            if (successBox) successBox.style.display = "none";
-                            form.style.display = "block";
-                            form.reset();
-
-                            // Очищаем список прикрепленных файлов
-                            const fileList = form.querySelector('.rf-filenames-list');
-                            if (fileList) fileList.innerHTML = '';
-                        }, 500);
-                    }, 3000);
+                    return;
                 }
-            }
-        });
 
-        oldSend.apply(this, arguments);
-    };
+                if (successBox) {
+                    successBox.style.display = 'block';
+                }
+                form.style.display = 'none';
 
-    // --- 2. ИНИЦИАЛИЗАЦИЯ ОТКРЫТИЯ/ЗАКРЫТИЯ ОКОН ---
-    const bsrModals = document.querySelectorAll('.bsr-modal');
+                setTimeout(() => {
+                    activeModal.classList.add('bsr-modal--hidden');
+                    setTimeout(() => {
+                        if (successBox) {
+                            successBox.style.display = 'none';
+                        }
+                        form.style.display = 'block';
+                        form.reset();
 
-    // --- 3. ИНИЦИАЛИЗАЦИЯ МАСКИ ТЕЛЕФОНА ---
+                        const fileList = form.querySelector('.rf-filenames-list');
+                        if (fileList) {
+                            fileList.innerHTML = '';
+                        }
+                    }, 500);
+                }, 3000);
+            });
+
+            oldSend.apply(this, arguments);
+        };
+    }
+
     if (typeof IMask !== 'undefined') {
         const phoneInputs = document.querySelectorAll('.js-bsr-phone-mask');
 
-        phoneInputs.forEach(input => {
+        phoneInputs.forEach((input) => {
             const maskPattern = input.getAttribute('data-mask');
-            if (maskPattern) {
-                // Инициализация маски (видимая всегда)
-                const mask = IMask(input, {
-                    mask: maskPattern,
-                    lazy: false,
-                    placeholderChar: '_'
-                });
+            if (!maskPattern) {
+                return;
+            }
 
-                const form = input.closest('form');
-                const isRequired = input.hasAttribute('required');
+            const phoneError = input.getAttribute('data-phone-error') || '';
+            const mask = IMask(input, {
+                mask: maskPattern,
+                lazy: false,
+                placeholderChar: '_'
+            });
 
-                // Универсальная функция валидации
-                const validatePhone = () => {
-                    const isEmpty = mask.unmaskedValue === '';
-                    const isComplete = mask.masked.isComplete;
+            const form = input.closest('form');
+            const isRequired = input.hasAttribute('required');
 
-                    // 1. Обязательно, но не заполнено (или заполнено не до конца)
-                    if (isRequired && !isComplete) {
-                        input.setCustomValidity('Пожалуйста, введите номер полностью.');
-                    }
-                    // 2. Необязательно, но начали вводить и бросили на половине
-                    else if (!isRequired && !isEmpty && !isComplete) {
-                        input.setCustomValidity('Пожалуйста, введите номер полностью.');
-                    }
-                    // 3. Всё правильно (ввели полностью или оставили пустым необязательное)
-                    else {
-                        input.setCustomValidity('');
-                    }
-                };
+            const validatePhone = () => {
+                const isEmpty = mask.unmaskedValue === '';
+                const isComplete = mask.masked.isComplete;
 
-                // ВАЖНО: Запускаем проверку СРАЗУ при открытии окна!
-                // Это заблокирует кнопку "Отправить" на нативном уровне браузера.
-                validatePhone();
+                if ((isRequired && !isComplete) || (!isRequired && !isEmpty && !isComplete)) {
+                    input.setCustomValidity(phoneError);
+                } else {
+                    input.setCustomValidity('');
+                }
+            };
 
-                // Проверяем при каждом введенном символе
-                mask.on('accept', validatePhone);
+            validatePhone();
+            mask.on('accept', validatePhone);
 
-                if (form) {
-                    // Перехватываем клик по кнопке отправки
-                    const submitBtn = form.querySelector('[type="submit"], .bsr-form__submit');
-                    if (submitBtn) {
-                        submitBtn.addEventListener('click', () => {
-                            validatePhone(); // Перепроверяем на всякий случай
+            if (form) {
+                const submitBtn = form.querySelector('[type="submit"], .bsr-form__submit');
+                if (submitBtn) {
+                    submitBtn.addEventListener('click', () => {
+                        validatePhone();
 
-                            // Если поле НЕ обязательное и мы его не заполняли, 
-                            // стираем маску перед самой отправкой, чтобы на почту пришла пустота
-                            if (!isRequired && mask.unmaskedValue === '') {
-                                input.value = '';
-                            }
-                        });
-                    }
-
-                    // Восстанавливаем всё после успешной отправки (сброс от RadicalForm)
-                    form.addEventListener('reset', () => {
-                        setTimeout(() => {
-                            mask.value = '';
-                            mask.updateValue();
-                            validatePhone(); // Снова блокируем для следующей отправки
-                        }, 10);
+                        if (!isRequired && mask.unmaskedValue === '') {
+                            input.value = '';
+                        }
                     });
                 }
+
+                form.addEventListener('reset', () => {
+                    setTimeout(() => {
+                        mask.value = '';
+                        mask.updateValue();
+                        validatePhone();
+                    }, 10);
+                });
             }
         });
     }
 
-    bsrModals.forEach(formModal => {
-        const modalId = formModal.id;
-        const form = formModal.querySelector('.bsr-form');
-        if (!form) return;
+    document.addEventListener('click', (e) => {
+        const closeBtn = e.target.closest('.bsr-modal__close');
+        if (closeBtn) {
+            e.preventDefault();
+            const modal = closeBtn.closest('.bsr-modal');
+            if (modal) {
+                modal.classList.add('bsr-modal--hidden');
+            }
+            return;
+        }
 
-        const isAutofill = form.getAttribute('data-autofill') === '1';
+        if (e.target.classList.contains('bsr-modal')) {
+            e.target.classList.add('bsr-modal--hidden');
+            return;
+        }
 
-        document.addEventListener('click', (e) => {
-            const openBtn = e.target.closest('.bsr-open-' + modalId + ', .bsr-open-modal');
-            if (openBtn && !e.target.classList.contains('rf-button-send')) {
-                // Защита от конфликта общих кнопок
-                if (openBtn.classList.contains('bsr-open-modal') && !openBtn.classList.contains('bsr-open-' + modalId)) {
-                    if (document.querySelector('.bsr-modal') !== formModal) return;
-                }
+        if (e.target.classList.contains('rf-button-send')) {
+            return;
+        }
 
-                e.preventDefault();
-                const btnText = openBtn.textContent.trim();
-                const title = formModal.querySelector('.bsr-form__title');
-                const subject = formModal.querySelector('input[name="rfSubject"]');
+        const firstModal = document.querySelector('.bsr-modal');
+        const modals = document.querySelectorAll('.bsr-modal');
 
-                if (isAutofill && btnText && !btnText.toLowerCase().includes('отправить') && !btnText.toLowerCase().includes('send')) {
-                    if (title) title.textContent = btnText;
-                    if (subject) subject.value = btnText;
-                }
-
-                formModal.classList.remove('bsr-modal--hidden');
+        modals.forEach((formModal) => {
+            const modalId = formModal.id;
+            const form = formModal.querySelector('.bsr-form');
+            if (!modalId || !form) {
+                return;
             }
 
-            // Закрытие по крестику или клику мимо окна
-            if (e.target.closest('.bsr-modal__close') || e.target === formModal) {
-                formModal.classList.add('bsr-modal--hidden');
+            const openBtn = e.target.closest('.bsr-open-' + cssEscape(modalId) + ', .bsr-open-modal');
+            if (!openBtn) {
+                return;
             }
+
+            if (openBtn.classList.contains('bsr-open-modal') && !openBtn.classList.contains('bsr-open-' + modalId)) {
+                if (firstModal !== formModal) {
+                    return;
+                }
+            }
+
+            e.preventDefault();
+
+            const isAutofill = form.getAttribute('data-autofill') === '1';
+            const btnText = openBtn.textContent.trim();
+            const title = formModal.querySelector('.bsr-form__title');
+            const subject = formModal.querySelector('input[name="rfSubject"]');
+
+            if (isAutofill && btnText && !btnText.toLowerCase().includes('отправить') && !btnText.toLowerCase().includes('send')) {
+                if (title) {
+                    title.textContent = btnText;
+                }
+                if (subject) {
+                    subject.value = btnText;
+                }
+            }
+
+            formModal.classList.remove('bsr-modal--hidden');
         });
     });
 });

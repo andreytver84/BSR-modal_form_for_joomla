@@ -7,49 +7,129 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\Helper\ModuleHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
-use Joomla\CMS\Factory;
 
+if (!function_exists('bsrSanitizeRedirectUrl')) {
+    /**
+     * Разрешает только относительный путь вида /thanks (без //, javascript:, data:).
+     *
+     * @param   string  $url
+     *
+     * @return  string
+     */
+    function bsrSanitizeRedirectUrl($url)
+    {
+        $url = trim((string) $url);
 
-// 1. Подключаем статические стили и скрипты
-$doc = Joomla\CMS\Factory::getDocument();
-$doc->addStyleSheet(Uri::root(true) . '/modules/mod_bsr_form/assets/css/style.css', ['version' => '2.6.1']);
-$doc->addScript(Uri::root(true) . '/modules/mod_bsr_form/assets/js/script.js', ['version' => '2.6.1']);
+        if ($url === '' || $url[0] !== '/' || substr($url, 0, 2) === '//' || strpos($url, '\\') !== false) {
+            return '';
+        }
 
+        if (preg_match('/^[a-z][a-z0-9+.-]*:/i', $url)) {
+            return '';
+        }
 
-// 2. Базовые настройки / Basic settings
+        $lower = strtolower($url);
+
+        if (strpos($lower, 'javascript:') !== false || strpos($lower, 'data:') !== false || strpos($lower, 'vbscript:') !== false) {
+            return '';
+        }
+
+        return $url;
+    }
+}
+
+if (!function_exists('bsrSanitizeColor')) {
+    /**
+     * Оставляет только hex-цвет.
+     *
+     * @param   string  $color
+     *
+     * @return  string
+     */
+    function bsrSanitizeColor($color)
+    {
+        $color = trim((string) $color);
+
+        if (preg_match('/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/', $color)) {
+            return $color;
+        }
+
+        return '';
+    }
+}
+
+if (!function_exists('bsrSanitizeFormId')) {
+    /**
+     * ID формы: латиница, цифры, дефис и подчёркивание.
+     *
+     * @param   string  $id
+     *
+     * @return  string
+     */
+    function bsrSanitizeFormId($id)
+    {
+        return preg_replace('/[^A-Za-z0-9_-]/', '', (string) $id);
+    }
+}
+
+if (!function_exists('bsrSanitizeCssClasses')) {
+    /**
+     * CSS-классы: буквы, цифры, дефис, подчёркивание и пробелы.
+     *
+     * @param   string  $classes
+     *
+     * @return  string
+     */
+    function bsrSanitizeCssClasses($classes)
+    {
+        $classes = preg_replace('/[^A-Za-z0-9 _-]/', '', (string) $classes);
+
+        return trim(preg_replace('/\s+/', ' ', $classes));
+    }
+}
+
+$assetVersion = '2.6.2';
+$app = Factory::getApplication();
+$doc = $app->getDocument();
+$base = Uri::root(true);
+
 $rfCallId = $params->get('rf_call_id', '');
 $formTitle = $params->get('form_title', Text::_('MOD_BSR_FORM_DEFAULT_FORM_TITLE'));
 $btnText = $params->get('btn_text', Text::_('MOD_BSR_FORM_DEFAULT_BTN_TEXT'));
 $successMsg = $params->get('success_msg', Text::_('MOD_BSR_FORM_DEFAULT_SUCCESS_MSG'));
 $formFields = $params->get('form_fields', []);
 $autofillTitle = $params->get('autofill_title', 1);
-$agreementText = $params->get('agreement_text', Text::_('MOD_BSR_FORM_DEFAULT_AGREEMENT_TEXT'));
+$agreementText = InputFilter::getInstance()->clean(
+    (string) $params->get('agreement_text', Text::_('MOD_BSR_FORM_DEFAULT_AGREEMENT_TEXT')),
+    'html'
+);
 
-// 3. Аналитика и редирект / Analytics and redirect
-$redirectUrl = $params->get('redirect_url', '');
-$ymGoal = $params->get('ym_goal', '');
+$redirectUrl = bsrSanitizeRedirectUrl($params->get('redirect_url', ''));
+$ymGoal = preg_replace('/[^A-Za-z0-9_-]/', '', (string) $params->get('ym_goal', ''));
 
-// 4. Настройки дизайна / Design settings
-$formIdRaw = $params->get('form_id', '');
-$formClass = $params->get('form_class', '');
-$btnClass = $params->get('btn_class', '');
-$uploadBtnClass = $params->get('upload_btn_class', '');
-$colorBtn = $params->get('color_btn', '');
-$colorBtnHover = $params->get('color_btn_hover', '');
-$colorFocus = $params->get('color_focus', '');
+$formIdRaw = bsrSanitizeFormId($params->get('form_id', ''));
+$formClass = bsrSanitizeCssClasses($params->get('form_class', ''));
+$btnClass = bsrSanitizeCssClasses($params->get('btn_class', ''));
+$uploadBtnClass = bsrSanitizeCssClasses($params->get('upload_btn_class', ''));
+$colorBtn = bsrSanitizeColor($params->get('color_btn', ''));
+$colorBtnHover = bsrSanitizeColor($params->get('color_btn_hover', ''));
+$colorFocus = bsrSanitizeColor($params->get('color_focus', ''));
 
-// 5. Настройки маски телефона
 $enablePhoneMask = $params->get('enable_phone_mask', 0);
-$phoneMaskFormat = $params->get('phone_mask_format', '+{7} (000) 000-00-00');
+$phoneMaskFormat = preg_replace('/[^0-9A-Za-z{}\[\]()+\-_*# .]/', '', (string) $params->get('phone_mask_format', '+{7} (000) 000-00-00'));
+$phoneErrorText = Text::_('MOD_BSR_FORM_ERROR_PHONE_INCOMPLETE');
 
-// Проверяем, есть ли вообще поле "Телефон" в нашей форме
 $hasPhoneField = false;
+
 if (!empty($formFields)) {
     foreach ($formFields as $field) {
         $item = (array) $field;
+
         if (!empty($item['f_type']) && $item['f_type'] === 'tel') {
             $hasPhoneField = true;
             break;
@@ -57,16 +137,16 @@ if (!empty($formFields)) {
     }
 }
 
-// Умная загрузка: подключаем IMask ТОЛЬКО если маска включена И есть поле телефона
+$doc->addStyleSheet($base . '/modules/mod_bsr_form/assets/css/style.css', ['version' => $assetVersion]);
+
 if ($enablePhoneMask && $hasPhoneField) {
-    $doc = Factory::getDocument();
-    $doc->addScript(Uri::root() . 'modules/mod_bsr_form/assets/js/imask.min.js');
+    $doc->addScript($base . '/modules/mod_bsr_form/assets/js/imask.min.js', ['version' => '7.6.1']);
 }
 
-// 6. Генерация уникального ID / Generate unique ID
-$uniqueModalId = !empty($formIdRaw) ? $formIdRaw : 'bsr-modal-' . rand(10000, 99999);
+$doc->addScript($base . '/modules/mod_bsr_form/assets/js/script.js', ['version' => $assetVersion]);
 
-// 7. Подключаем шаблон (ТОЛЬКО ПОСЛЕ ТОГО, КАК ВСЕ ПЕРЕМЕННЫЕ ГОТОВЫ)
+$uniqueModalId = $formIdRaw !== '' ? $formIdRaw : 'bsr-modal-' . (int) $module->id;
+
 $layoutPath = ModuleHelper::getLayoutPath('mod_bsr_form', $params->get('layout', 'default'));
 
 if ($layoutPath) {
