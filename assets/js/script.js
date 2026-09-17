@@ -250,17 +250,101 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
 
             const isAutofill = form.getAttribute('data-autofill') === '1';
+            const isQuickOrder = form.getAttribute('data-quick-order') === '1';
+            const qoContainer = form.getAttribute('data-qo-container') || '';
+            const qoSelector = form.getAttribute('data-qo-selector') || '';
+            const qoMode = form.getAttribute('data-qo-mode') || 'consult';
+            const qoTopic = (form.getAttribute('data-qo-topic') || '').trim();
             const btnText = openBtn.textContent.trim();
             const title = formModal.querySelector('.bsr-form__title');
             const subject = formModal.querySelector('input[name="rfSubject"]');
+            const topic = formModal.querySelector('.bsr-form__topic');
 
-            if (isAutofill && btnText && !btnText.toLowerCase().includes('отправить') && !btnText.toLowerCase().includes('send')) {
+            if (!form.dataset.bsrOriginalTitle) {
+                form.dataset.bsrOriginalTitle = title ? title.textContent : '';
+                form.dataset.bsrOriginalSubject = subject ? subject.value : '';
+            }
+
+            if (title) {
+                title.textContent = form.dataset.bsrOriginalTitle || '';
+            }
+            if (subject) {
+                subject.value = form.dataset.bsrOriginalSubject || '';
+            }
+            if (topic) {
+                topic.textContent = '';
+                topic.hidden = true;
+            }
+
+            const canAutofill = isAutofill && btnText
+                && !btnText.toLowerCase().includes('отправить')
+                && !btnText.toLowerCase().includes('send');
+
+            const applyAutofill = () => {
+                if (!canAutofill) {
+                    return;
+                }
+
                 if (title) {
                     title.textContent = btnText;
                 }
                 if (subject) {
                     subject.value = btnText;
                 }
+            };
+
+            const extractQuickOrderText = () => {
+                if (!isQuickOrder || !qoSelector) {
+                    return '';
+                }
+
+                try {
+                    let root = openBtn;
+
+                    if (qoContainer) {
+                        root = openBtn.closest('.' + cssEscape(qoContainer));
+                    }
+
+                    if (!root) {
+                        return '';
+                    }
+
+                    const el = root.querySelector(qoSelector);
+
+                    return el ? el.textContent.replace(/\s+/g, ' ').trim() : '';
+                } catch (err) {
+                    return '';
+                }
+            };
+
+            const extracted = extractQuickOrderText();
+
+            if (extracted) {
+                if (qoMode === 'order') {
+                    const combined = (btnText + ' ' + extracted).trim();
+
+                    if (title) {
+                        title.textContent = combined;
+                    }
+                    if (subject) {
+                        subject.value = combined;
+                    }
+                } else {
+                    applyAutofill();
+
+                    const heading = title ? title.textContent.trim() : btnText;
+                    const topicLine = (qoTopic + ' ' + extracted).trim();
+
+                    if (topic) {
+                        topic.textContent = topicLine;
+                        topic.hidden = false;
+                    }
+                    if (subject) {
+                        subject.value = (heading + ' ' + topicLine).trim();
+                    }
+                }
+            } else {
+                applyAutofill();
             }
 
             formModal.classList.remove('bsr-modal--hidden');

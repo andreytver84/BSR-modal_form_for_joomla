@@ -29,12 +29,18 @@ $allowedTypes = ['text', 'tel', 'email', 'date', 'textarea', 'file', 'select'];
 
         <form class="bsr-form <?php echo htmlspecialchars((string) $formClass, ENT_QUOTES, 'UTF-8'); ?>"
             enctype="multipart/form-data" data-autofill="<?php echo $autofillTitle ? '1' : '0'; ?>"
+            data-quick-order="<?php echo $quickOrder ? '1' : '0'; ?>"
+            data-qo-container="<?php echo htmlspecialchars((string) $quickOrderContainer, ENT_QUOTES, 'UTF-8'); ?>"
+            data-qo-selector="<?php echo htmlspecialchars((string) $quickOrderSelector, ENT_QUOTES, 'UTF-8'); ?>"
+            data-qo-mode="<?php echo htmlspecialchars((string) $quickOrderType, ENT_QUOTES, 'UTF-8'); ?>"
+            data-qo-topic="<?php echo htmlspecialchars((string) $quickOrderTopic, ENT_QUOTES, 'UTF-8'); ?>"
             data-redirect="<?php echo htmlspecialchars((string) $redirectUrl, ENT_QUOTES, 'UTF-8'); ?>"
             data-goal="<?php echo htmlspecialchars((string) $ymGoal, ENT_QUOTES, 'UTF-8'); ?>">
 
             <div class="bsr-form__header">
                 <h3 class="bsr-form__title"><?php echo htmlspecialchars((string) $formTitle, ENT_QUOTES, 'UTF-8'); ?>
                 </h3>
+                <div class="bsr-form__topic" hidden></div>
                 <input name="rfSubject"
                     value="<?php echo htmlspecialchars((string) $formTitle, ENT_QUOTES, 'UTF-8'); ?>" type="hidden">
             </div>

@@ -93,7 +93,31 @@ if (!function_exists('bsrSanitizeCssClasses')) {
     }
 }
 
-$assetVersion = '2.6.2';
+if (!function_exists('bsrSanitizeCssSelector')) {
+    /**
+     * Относительный CSS-селектор для поиска названия (h3 > span, .title).
+     *
+     * @param   string  $selector
+     *
+     * @return  string
+     */
+    function bsrSanitizeCssSelector($selector)
+    {
+        $selector = trim((string) $selector);
+
+        if ($selector === '' || preg_match('/javascript:|expression\s*\(|url\s*\(/i', $selector)) {
+            return '';
+        }
+
+        if (!preg_match('/^[A-Za-z0-9\s_\-.#>~+*=:\[\]()\'",]+$/', $selector)) {
+            return '';
+        }
+
+        return $selector;
+    }
+}
+
+$assetVersion = '2.7.0';
 $app = Factory::getApplication();
 $doc = $app->getDocument();
 $base = Uri::root(true);
@@ -104,6 +128,16 @@ $btnText = $params->get('btn_text', Text::_('MOD_BSR_FORM_DEFAULT_BTN_TEXT'));
 $successMsg = $params->get('success_msg', Text::_('MOD_BSR_FORM_DEFAULT_SUCCESS_MSG'));
 $formFields = $params->get('form_fields', []);
 $autofillTitle = $params->get('autofill_title', 1);
+$quickOrder = (int) $params->get('quick_order', 0) === 1 ? 1 : 0;
+$quickOrderType = $params->get('quick_order_type', 'consult') === 'order' ? 'order' : 'consult';
+$quickOrderContainer = bsrSanitizeCssClasses($params->get('quick_order_container', ''));
+
+if ($quickOrderContainer !== '' && strpos($quickOrderContainer, ' ') !== false) {
+    $quickOrderContainer = explode(' ', $quickOrderContainer)[0];
+}
+
+$quickOrderSelector = bsrSanitizeCssSelector($params->get('quick_order_selector', ''));
+$quickOrderTopic = Text::_('MOD_BSR_FORM_TXT_ON_TOPIC');
 $agreementText = InputFilter::getInstance()->clean(
     (string) $params->get('agreement_text', Text::_('MOD_BSR_FORM_DEFAULT_AGREEMENT_TEXT')),
     'html'

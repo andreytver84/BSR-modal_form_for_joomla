@@ -5,7 +5,7 @@
     <authorEmail>order@bestsite-studio.ru</authorEmail>
     <authorUrl>https://bestsite-tver.ru</authorUrl>
     <creationDate>2026</creationDate>
-    <version>2.6.2</version>
+    <version>2.7.0</version>
     <description><![CDATA[
         <div style="background: #f4f7f9; padding: 20px; border-left: 5px solid #004E82; border-radius: 4px; font-family: sans-serif; margin-bottom: 20px;">
             <h2 style="margin-top: 0; color: #004E82;">BSR Form — Инструкция</h2>
@@ -42,6 +42,22 @@
                 <field name="autofill_title" type="radio" layout="joomla.form.field.radio.switcher" label="MOD_BSR_FORM_FIELD_AUTOFILL_TITLE_LABEL" default="1">
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
+                </field>
+
+                <field name="quick_order" type="radio" layout="joomla.form.field.radio.switcher" label="MOD_BSR_FORM_FIELD_QUICK_ORDER_LABEL" description="MOD_BSR_FORM_FIELD_QUICK_ORDER_DESC" default="0">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+
+                <field name="quick_order_note" type="note" class="alert alert-info" label="MOD_BSR_FORM_FIELD_QUICK_ORDER_NOTE_LABEL" description="MOD_BSR_FORM_FIELD_QUICK_ORDER_NOTE_DESC" showon="quick_order:1" />
+
+                <field name="quick_order_container" type="text" label="MOD_BSR_FORM_FIELD_QUICK_ORDER_CONTAINER_LABEL" description="MOD_BSR_FORM_FIELD_QUICK_ORDER_CONTAINER_DESC" default="" showon="quick_order:1" />
+
+                <field name="quick_order_selector" type="text" label="MOD_BSR_FORM_FIELD_QUICK_ORDER_SELECTOR_LABEL" description="MOD_BSR_FORM_FIELD_QUICK_ORDER_SELECTOR_DESC" default="" showon="quick_order:1" />
+
+                <field name="quick_order_type" type="radio" class="btn-group" label="MOD_BSR_FORM_FIELD_QUICK_ORDER_TYPE_LABEL" description="MOD_BSR_FORM_FIELD_QUICK_ORDER_TYPE_DESC" default="consult" showon="quick_order:1">
+                    <option value="consult">MOD_BSR_FORM_OPTION_QUICK_ORDER_CONSULT</option>
+                    <option value="order">MOD_BSR_FORM_OPTION_QUICK_ORDER_ORDER</option>
                 </field>
                 
                 <field name="btn_text" type="text" label="MOD_BSR_FORM_FIELD_BTN_TEXT_LABEL" default="MOD_BSR_FORM_DEFAULT_BTN_TEXT" translate_default="true" />
