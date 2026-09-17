@@ -1,0 +1,22 @@
+---
+description: PHP-конвенции Joomla 5/6 для модуля, хелперов и tmpl.
+globs: "**/*.php"
+alwaysApply: false
+---
+
+# PHP Joomla 5/6
+
+```php
+defined('_JEXEC') or die;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+```
+
+- Запрещены `JFactory`, `JText`, `JHtml`, `JRequest`, `DS`, `jimport`.
+- Токены: `Text::_('MOD_BSR_FORM_…')`, не хардкод UI-строк.
+- Layout: `ModuleHelper::getLayoutPath('mod_bsr_form', $params->get('layout', 'default'))`.
+- Параметры модуля: только `$params->get()`, затем санитайз.
+- Повторно использовать `bsrSanitizeRedirectUrl`, `bsrSanitizeColor`, `bsrSanitizeFormId`, `bsrSanitizeCssClasses`.
+- Новые классы (если просили) — PSR-4 в `src/`, namespace `Bestsite\Module\BsrForm`, `\defined('_JEXEC') or die;`.
+- Не переводить этот модуль на WebAssetManager/DI без явной задачи.
+- Ассеты: `version` = `$assetVersion`, IMask подключать только при tel + маске.

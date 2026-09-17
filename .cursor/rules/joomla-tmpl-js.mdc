@@ -1,0 +1,14 @@
+---
+description: XSS-экранирование в tmpl и безопасный JS модалки.
+globs: "{tmpl/**/*.php,assets/js/script.js}"
+alwaysApply: false
+---
+
+# Layout и JS
+
+- Любой вывод параметра/ключа: `htmlspecialchars(..., ENT_QUOTES, 'UTF-8')`.
+- `agreementText` уже чистится `InputFilter` — не экранировать повторно как текст (это HTML).
+- Типы полей только из whitelist. `name` полей — `[A-Za-z0-9_-]`.
+- Редирект в `data-redirect` уже санитизирован в PHP; в JS проверяй `isSafeRedirect`.
+- Не подключай jQuery. Не патчи глобалы, кроме существующего XHR-хука RadicalForm.
+- Не читайте и не «улучшайте» `imask.min.js`.

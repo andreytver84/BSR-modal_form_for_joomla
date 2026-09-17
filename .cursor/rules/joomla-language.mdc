@@ -1,0 +1,17 @@
+---
+description: Языковые константы Joomla: ru-RU/en-GB, .ini и .sys.ini.
+globs: "**/language/**/*.ini"
+alwaysApply: false
+---
+
+# Языковые файлы
+
+- Кодировка UTF-8 без BOM. Формат: `KEY="value"`.
+- Префикс ключей: `MOD_BSR_FORM_`. UPPER_SNAKE_CASE.
+- `.ini` — runtime (поля, ошибки, дефолты, JS-строки через `Text::_`).
+- `.sys.ini` — имя/описание для установщика и списка модулей (`MOD_BSR_FORM`, `MOD_BSR_FORM_XML_DESCRIPTION`).
+- Одна и та же **карта ключей** в `language/ru-RU/` и `language/en-GB/`. Значения разные, ключи нет.
+- Новая константа: добавь во все 4 файла, если это sys-строка — в оба `.sys.ini`; иначе в оба `.ini`.
+- Кавычки внутри значения: `""`. Не используй однострочные комментарии с `;` внутри строк.
+- HTML допустим только в `*_DESC` и instruction-блоках. В XML-полях — ключ, не русский текст.
+- Не переименовывай `ru-RU.mod_bsr_form.ini` → `mod_bsr_form.ini` без задачи.
